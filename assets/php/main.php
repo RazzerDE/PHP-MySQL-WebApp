@@ -3,15 +3,20 @@ $servername = "localhost";
 $database = "buchladen";
 $username = "root";
 # TODO: CHANGE PASSWORD FOR XAMP!
-$password = "root";
+$password = "";
 
 // Create connection
-$conn = new mysqli($servername, $username, $password, $database);
-# TODO: DER "SELECTIONSORT"-ALGORITHMUS IST IN DER TABLE.PHP DATEI ZU FINDEN.
+try {
+    $conn = new mysqli($servername, $username, $password, $database);
+    # TODO: DER "SELECTIONSORT"-ALGORITHMUS IST IN DER TABLE.PHP DATEI ZU FINDEN.
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+} catch (Exception $ex) {
+    echo 'Die Datenbank "buchladen" existiert nicht. Bitte führe das SQL-Script aus, damit diese Seite funktioniert.';
+    exit();
 }
 
 function resetDB($redirected = False): void {
