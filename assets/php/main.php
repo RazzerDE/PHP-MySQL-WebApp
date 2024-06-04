@@ -3,7 +3,7 @@ $servername = "localhost";
 $database = "buchladen";
 $username = "root";
 # TODO: CHANGE PASSWORD FOR XAMP!
-$password = "root";
+$password = "";
 
 // Create connection
 try {
@@ -15,7 +15,12 @@ try {
         die("Connection failed: " . $conn->connect_error);
     }
 } catch (Exception $ex) {
-    echo 'Die Datenbank "buchladen" existiert nicht. Bitte führe das SQL-Script aus, damit diese Seite funktioniert.';
+    if (strpos($ex->getMessage(), 'Unknown database') !== false) {
+        echo 'Die Datenbank "buchladen" existiert nicht. Bitte führe das SQL-Script aus, damit diese Seite funktioniert.';
+    } else {
+        echo 'Die Anmeldedaten für die Datenbank sind nicht korrekt - bitte korrigiere diese, damit diese Seite funktioneirt.';
+    }
+
     exit();
 }
 
