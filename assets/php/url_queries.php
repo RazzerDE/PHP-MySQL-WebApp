@@ -10,7 +10,7 @@ function getTableDataByURL(): void {
         getAllTableData(null, $_GET['sql_statement']);
     } else if (isset($_GET['dropdownSelect'])) {
         $table = $_GET['dropdownSelect'];
-        getAllTableData(null, 'SELECT+*+FROM+'.$table);
+        getAllTableData(null, 'SELECT * FROM '.$table);
     } else {
         getAllTableData();
     }
