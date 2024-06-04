@@ -8,6 +8,9 @@ function getTableDataByURL(): void {
     // change sql statement if another one is needed
     if (isset($_GET['sql_statement'])) {
         getAllTableData(null, $_GET['sql_statement']);
+    } else if (isset($_GET['dropdownSelect'])) {
+        $table = $_GET['dropdownSelect'];
+        getAllTableData(null, 'SELECT+*+FROM+'.$table);
     } else {
         getAllTableData();
     }
