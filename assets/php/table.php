@@ -2,7 +2,8 @@
 require_once 'assets/php/main.php';
 
 $tableData = [];
-$current_table = "Wähle eine Tabelle in dem rechten Dropdown-Menü aus.";
+
+$current_table = $_GET['dropdownSelect'] ?? "Wähle eine Tabelle in dem rechten Dropdown-Menü aus.";
 
 // get Table data
 function getAllTableData($column = null, $statement = null): array {
