@@ -13,6 +13,9 @@
   <a href="https://www.php.net/releases/8.3/en.php">
     <img src="https://img.shields.io/badge/version-PHP_8.3-27ae60?style=for-the-badge" alt="php version" style="height: 25px;">
   </a>
+  <a href="https://www.php.net/releases/8.3/en.php">
+    <img src="https://img.shields.io/badge/database-MySQL_8.0-2980b9?style=for-the-badge" alt="php version" style="height: 25px;">
+  </a>
   <a href="https://discord.gg/bl4cklist">
     <img src="https://img.shields.io/discord/616655040614236160?style=for-the-badge&logo=discord&label=Discord&color=%237289da" alt="discord server" style="height: 25px;">
   </a>
