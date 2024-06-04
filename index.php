@@ -64,7 +64,7 @@
             <div class="flex items-center mt-4 gap-x-3">
                 <form id="dropdownForm" action="" method="get">
                     <label for="dropdownSelect">
-                        <select id="dropdownSelect" name="dropdownSelect" onchange="" class="flex items-center text-white justify-center w-1/2 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 border rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 bg-gray-900 hover:bg-gray-100 border-gray-700">
+                        <select id="dropdownSelect" name="dropdownSelect" onchange="this.form.submit()" class="flex items-center text-white justify-center w-1/2 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 border rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 bg-gray-900 hover:bg-gray-100 border-gray-700">
                             <option value="buecher">buecher</option>
                             <option value="autoren">autoren</option>
                             <option value="autoren_has_buecher">autoren_has_buecher</option>
@@ -76,7 +76,6 @@
                             <option value="verlage">verlage</option>
                         </select>
                     </label>
-                    <input type="submit" value="Absenden">
                 </form>
             </div>
         </div>
