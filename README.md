@@ -47,7 +47,7 @@ It supports following <strong>features</strong>:
   <br />
   <li>🔎 <strong>URL-Parameters</strong>: This little page works with URL parameters like `myurl.de/index.php?filterBy=column` to show specific MySQL tables.</li>
   <br />
-  <li>🔎 <strong>GET & POST-Methods for PHP</strong>: We're also working with "GET" and "POST" Methods from PHP to reset the database if a button was pressed as example.</li>
+  <li>🔩 <strong>GET & POST-Methods for PHP</strong>: We're also working with "GET" and "POST" Methods from PHP to reset the database if a button was pressed as example.</li>
   <br />
   <li>💡 <strong>Selectionsort-Algorithm</strong>: We're using the "Selectionsort"-Algorithm to sort our received data with PHP by the corresponding column name. However, we included also the better MySQL solution commented out.</li>
 </ul>
