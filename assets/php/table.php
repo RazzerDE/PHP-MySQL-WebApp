@@ -136,7 +136,9 @@ function buildTableRows(): void {
     foreach ($tableData[0] as $cell) {
         echo '<td><input class="bg-gray-700" type="text" name="newRow[]"></td>';
     }
-    echo '<td><input class="text-lg cursor-pointer text-center content-center" type="submit" value="&#128190"></td>';
+    echo '<td>
+        <input value=" " class="cursor-pointer ml-14" type="submit" style="background: url(https://img.icons8.com/material-rounded/24/FFFFFF/save.png) no-repeat center; width: 24px; height: 24px; border: none;">
+         </td>';
     echo '</tr> </form';
 
 
