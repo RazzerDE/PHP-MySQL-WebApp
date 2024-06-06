@@ -19,5 +19,4 @@ function getTableDataByURL(): void {
     if (empty($tableData)) {
         resetDB();
     }
-
 }

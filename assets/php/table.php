@@ -7,6 +7,20 @@ $tableName = null;
 
 $current_table = "Wähle eine Tabelle in dem rechten Dropdown-Menü aus.";
 
+// get table name
+function getTableName(): string {
+    if (isset($_GET['sql_statement'])) {
+        preg_match('/FROM\s+(\w+)/i', str_replace("+", "", $_GET['sql_statement']), $matches);
+        $tableName = $matches[1];
+    } else if (isset($_GET['dropdownSelect'])) {
+        $tableName = $_GET['dropdownSelect'];
+    } else {
+        $tableName = "buecher";
+    }
+
+    return $tableName;
+}
+
 // get all tables from database
 function getTables(): array {
     global $conn;
@@ -144,25 +158,9 @@ function buildTableRows(): void {
 function deleteRow($DELETE_PARAMETER): void {
     global $conn;
     global $tableName;
-    echo $tableName;
 
     // get table
-    if ($tableName === null) {
-
-        # page from dropdown
-        if (isset($_GET['dropdownSelect'])) {
-            $tableName = $_GET['dropdownSelect'];
-
-        # page from sql statement
-        } elseif (isset($_GET['sql_statement'])) {
-            preg_match('/FROM\s+(\w+)/i', $_GET['sql_statement'], $matches);
-            $tableName = $matches[1];
-
-        # default page
-        } else {
-           $tableName = "buecher";
-        }
-    }
+    $tableName = getTableName();
 
     $SQL = "DELETE FROM " . $tableName . " WHERE $DELETE_PARAMETER ";
     $conn->query($SQL);
