@@ -99,7 +99,7 @@ function getTableDataByURL(): void {
     }
 }
 
-function checkDatesInArray($array) {
+function checkDatesInArray($array): bool {
     foreach ($array as $item) {
         // Überprüfen, ob das Element ein Datum im Format 'YYYY-MM-DD' ist
         if (preg_match("/\d{4}-\d{2}-\d{2}/", $item)) {
@@ -113,7 +113,8 @@ function checkDatesInArray($array) {
                 return true;
             }
         } else {
-            return false;
+            return true;
         }
     }
+    return true;
 }
