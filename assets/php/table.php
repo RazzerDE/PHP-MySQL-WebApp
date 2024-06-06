@@ -201,17 +201,3 @@ function deleteRow($DELETE_PARAMETER): void {
     exit();
 
 }
-
-function editRow($editArgs): void {
-    global $conn;
-    global $tableName;
-
-    // get table
-    $tableName = getTableName();
-
-    $SQL = "DELETE FROM " . $tableName . " WHERE  ";
-    $conn->query($SQL);
-
-    header("Refresh: 0");
-    exit();
-}
