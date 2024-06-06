@@ -79,7 +79,7 @@ function getTableDataByURL(): void {
             $stmt->execute();
         } catch (mysqli_sql_exception $e) {
             // Fangen Sie den Fehler ab und behandeln Sie ihn
-            echo "Fehler beim Ausführen des SQL-Statements: " . $e->getMessage();
+            echo "<p class='text-center bg-red-700 border rounded border-gray-700'>". "Fehler beim Ausführen des SQL-Statements: " . $e->getMessage() . "</p>";
         }
 
     }

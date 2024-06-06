@@ -112,7 +112,7 @@ function buildTableRows(): void {
     foreach ($tableData[0] as $cell) {
         echo '<td><input class="bg-gray-700" type="text" name="newRow[]"></td>';
     }
-    echo '<td><input type="submit" value="Hinzufügen"></td>';
+    echo '<td><input type="submit" value="&#128190"></td>';
     echo '</tr> </form';
 
 
