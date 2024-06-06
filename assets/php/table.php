@@ -35,22 +35,6 @@ function getTables(): array {
     return $tables;
 }
 
-function executeSql($conn, $sql, $params) {
-    // Bereiten Sie das SQL-Statement vor
-    $stmt = $conn->prepare($sql);
-
-    // Binden Sie die Parameter an das vorbereitete Statement
-    $stmt->bind_param(str_repeat('s', count($params)), ...$params);
-
-    // Führen Sie das vorbereitete Statement aus
-    if ($stmt->execute()) {
-        echo "SQL statement executed successfully.";
-    } else {
-        echo "Error executing SQL statement: " . $stmt->error;
-    }
-}
-
-
 
 // get Table data
 function getAllTableData($table = null, $statement = null): array {
@@ -154,9 +138,11 @@ function buildTableRows(): void {
                 $columnContent = htmlspecialchars($cell);
             }
 
-            echo '<td id="cell-'.$columnContent.'" class="px-4 py-4 text-sm font-medium whitespace-nowrap">';
+            echo '<form name="editRow" methode="post" id="editRow form-'.$columnContent.'">';
+            echo '<td class="px-4 py-4 text-sm font-medium whitespace-nowrap">';
             echo '<input class="bg-gray-900" value="'.htmlspecialchars($cell).'">'; // Use htmlspecialchars to prevent XSS attacks
             echo '</td>';
+            echo '</form>';
 
             $count += 1;
         }
@@ -173,8 +159,8 @@ function buildTableRows(): void {
                         </button>
                     </form>
 
-                    <form method="post">
-                    <button type="submit" name="editRow" value="' . $columnNames[0] . ' = '. $columnContent.'" class="transition-colors duration-200 hover:text-yellow-500 text-gray-300 focus:outline-none">
+                    <form id="editRow" method="post">
+                    <button onclick="document.getElementById(`form-'.$columnContent.'`).submit();" class="transition-colors duration-200 hover:text-yellow-500 text-gray-300 focus:outline-none">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                             </svg>
