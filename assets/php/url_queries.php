@@ -97,7 +97,6 @@ function getTableDataByURL(): void {
     if (empty($tableData)) {
         resetDB();
     }
-
 }
 
 function checkDatesInArray($array) {
