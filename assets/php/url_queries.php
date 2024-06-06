@@ -50,29 +50,28 @@ function getTableDataByURL(): void {
     }
 
 
-    if (isset($_GET['newRow'])) {
-        $newRowValues = $_GET['newRow'];
+    if (isset($_POST['newRow'])) {
+        $newRowValues = $_POST['newRow'];
 
-        // Erstellen Sie die Teile des SQL-Statements
         $columns = implode(", ", $fields);
         $placeholders = rtrim(str_repeat('?, ', count($newRowValues)), ', ');
 
-        // Erstellen Sie das SQL-Statement
+        // Prepare sql statement
         $sql = "INSERT INTO $selectedTable ($columns) VALUES ($placeholders)";
 
-        // Bereiten Sie das SQL-Statement vor
         $stmt = $conn->prepare($sql);
 
-        // Binden Sie die Parameter an das vorbereitete Statement
-        $types = str_repeat('s', count($newRowValues)); // 's' bedeutet, dass der Parameter ein String ist
+        $types = str_repeat('s', count($newRowValues)); // 's' mean string
         $stmt->bind_param($types, ...$newRowValues);
 
-        // Führen Sie das vorbereitete Statement aus
-        if ($stmt->execute()) {
-
-        } else {
-            echo "Error executing SQL statement: " . $stmt->error;
+        try {
+            // Versuchen Sie, das Statement auszuführen
+            $stmt->execute();
+        } catch (mysqli_sql_exception $e) {
+            // Fangen Sie den Fehler ab und behandeln Sie ihn
+            echo "Fehler beim Ausführen des SQL-Statements: " . $e->getMessage();
         }
+
     }
 
 

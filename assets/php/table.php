@@ -97,7 +97,7 @@ function buildTableRows(): void {
     $idCounter = 1; // Zähler für die eindeutige ID
 
     // Neue Zeile mit Eingabefeldern
-    echo '<form><tr id="newRow" style="display: none">';
+    echo '<form method="post"><tr id="newRow" style="display: none">';
     foreach ($tableData[0] as $cell) {
         echo '<td><input class="bg-gray-700" type="text" name="newRow[]"></td>';
     }
