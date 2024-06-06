@@ -4,7 +4,22 @@ require_once 'assets/php/main.php';
 $tableData = [];
 $columnNames = null;
 $tableName = null;
-$current_table = $_GET['dropdownSelect'] ?? "Wähle eine Tabelle in dem rechten Dropdown-Menü aus.";
+
+$current_table = "Wähle eine Tabelle in dem rechten Dropdown-Menü aus.";
+
+// get all tables from database
+function getTables(): array {
+    global $conn;
+    $SQL = "SHOW TABLES";
+    $tables = [];
+
+    $result = $conn->query($SQL);
+    while($row = $result->fetch_array()){
+        $tables[] = $row[0];
+    }
+
+    return $tables;
+}
 
 function executeSql($conn, $sql, $params) {
     // Bereiten Sie das SQL-Statement vor
@@ -24,21 +39,16 @@ function executeSql($conn, $sql, $params) {
 
 
 // get Table data
-function getAllTableData($table = null, $statement = null, $only_table = null): array {
+function getAllTableData($table = null, $statement = null): array {
     global $conn;
     global $tableData;
+    global $tableName;
 
     if ($table == null) {
         $table = "buecher";
     }
 
-    if ($only_table != null) {
-        global $tableName;
-        $tableName = $table;
-
-        return [];
-    }
-
+    $tableName = $table;
     if ($statement != null) {
         $SQL = str_replace(";", "", $statement);
     } else {
@@ -163,8 +173,25 @@ function deleteRow($DELETE_PARAMETER): void {
     global $tableName;
     echo $tableName;
 
-    getAllTableData(null, null, true);
-    $SQL = "DELETE FROM buchladen." . $tableName . " WHERE $DELETE_PARAMETER ";
+    // get table
+    if ($tableName === null) {
+
+        # page from dropdown
+        if (isset($_GET['dropdownSelect'])) {
+            $tableName = $_GET['dropdownSelect'];
+
+        # page from sql statement
+        } elseif (isset($_GET['sql_statement'])) {
+            preg_match('/FROM\s+(\w+)/i', $_GET['sql_statement'], $matches);
+            $tableName = $matches[1];
+
+        # default page
+        } else {
+           $tableName = "buecher";
+        }
+    }
+
+    $SQL = "DELETE FROM " . $tableName . " WHERE $DELETE_PARAMETER ";
     $conn->query($SQL);
 
     header("Refresh: 0");

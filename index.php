@@ -44,7 +44,7 @@
     </header>
 
     <section class="grid pt-10 pb-2 px-8 min-h-full w-full bg-full text-white h-full px-4">
-        <?php include_once 'assets/php/table.php' ?>
+        <?php include_once 'assets/php/table.php'; getTableDataByURL(); ?>
         <div class="sm:flex items-center justify-between">
             <div>
                 <div class="flex items-center gap-x-3">
@@ -66,15 +66,13 @@
                     <label for="dropdownSelect">
                         <select id="dropdownSelect" name="dropdownSelect" onchange="this.form.submit()" class="flex items-center text-white justify-center w-1/2 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 border rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 bg-gray-900 hover:bg-gray-100 border-gray-700">
                             <option disabled selected hidden="hidden" value=""><?php $placeholder = $_GET['dropdownSelect'] ?? "buecher"; echo $placeholder;?></option>
-                            <option value="buecher">buecher</option>
-                            <option value="autoren">autoren</option>
-                            <option value="autoren_has_buecher">autoren_has_buecher</option>
-                            <option value="buecher_has_lieferanten">buecher_has_lieferanten</option>
-                            <option value="buecher_has_sparten">buecher_has_sparten</option>
-                            <option value="lieferanten">lieferanten</option>
-                            <option value="orte">orte</option>
-                            <option value="sparten">sparten</option>
-                            <option value="verlage">verlage</option>
+
+                            <?php
+                            // get tables for dropdown
+                            $tables = getTables();
+                            foreach ($tables as $table) {
+                                echo "<option value='$table'>$table</option>";
+                            } ?>
                         </select>
                     </label>
                 </form>
@@ -120,7 +118,6 @@
                         <table class="table-fixed border-separate min-w-full divide-y divide-gray-700" id="mysql-table">
                             <thead class="bg-gray-800 sticky top-0">
                                 <?php
-                                    getTableDataByURL();
 
                                     // Check if we have data to display
                                     if (!empty($tableData)) {
