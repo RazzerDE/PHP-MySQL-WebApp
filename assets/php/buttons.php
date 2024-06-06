@@ -12,3 +12,7 @@ if (!empty($_POST['reset_db'])) {
 if (!empty($_POST['deleteRow'])) {
     deleteRow($_POST['deleteRow']);
 }
+
+if (!empty($_POST['editRow'])) {
+    editRow($_POST['editRow']);
+}
