@@ -44,7 +44,7 @@
     </header>
 
     <section class="grid pt-10 pb-2 px-8 min-h-full w-full bg-full text-white h-full px-4">
-        <?php include_once 'assets/php/table.php' ?>
+        <?php include_once 'assets/php/table.php'; getTableDataByURL(); ?>
         <div class="sm:flex items-center justify-between">
             <div>
                 <div class="flex items-center gap-x-3">
@@ -118,7 +118,6 @@
                         <table class="table-fixed border-separate min-w-full divide-y divide-gray-700" id="mysql-table">
                             <thead class="bg-gray-800 sticky top-0">
                                 <?php
-                                    getTableDataByURL();
 
                                     // Check if we have data to display
                                     if (!empty($tableData)) {

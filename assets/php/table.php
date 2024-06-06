@@ -22,25 +22,20 @@ function getTables(): array {
 }
 
 // get Table data
-function getAllTableData($table = null, $statement = null, $only_table = null): array {
+function getAllTableData($table = null, $statement = null): array {
     global $conn;
     global $tableData;
+    global $tableName;
 
     if ($table == null) {
         $table = "buecher";
     }
 
-    if ($only_table != null) {
-        global $tableName;
-        $tableName = $table;
-
-        return [];
-    }
-
+    $tableName = $table;
     if ($statement != null) {
         $SQL = str_replace(";", "", $statement);
     } else {
-        $SQL = 	"SELECT * FROM buchladen.". $table;
+        $SQL = 	"SELECT * FROM ". $table;
     }
 
     // sort table based on filter
@@ -151,8 +146,25 @@ function deleteRow($DELETE_PARAMETER): void {
     global $tableName;
     echo $tableName;
 
-    getAllTableData(null, null, true);
-    $SQL = "DELETE FROM buchladen." . $tableName . " WHERE $DELETE_PARAMETER ";
+    // get table
+    if ($tableName === null) {
+
+        # page from dropdown
+        if (isset($_GET['dropdownSelect'])) {
+            $tableName = $_GET['dropdownSelect'];
+
+        # page from sql statement
+        } elseif (isset($_GET['sql_statement'])) {
+            preg_match('/FROM\s+(\w+)/i', $_GET['sql_statement'], $matches);
+            $tableName = $matches[1];
+
+        # default page
+        } else {
+           $tableName = "buecher";
+        }
+    }
+
+    $SQL = "DELETE FROM " . $tableName . " WHERE $DELETE_PARAMETER ";
     $conn->query($SQL);
 
     header("Refresh: 0");
