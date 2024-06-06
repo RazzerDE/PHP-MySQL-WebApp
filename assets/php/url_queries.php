@@ -83,11 +83,14 @@ function getTableDataByURL(): void {
             exit();
         } catch (mysqli_sql_exception $e) {
             // Fangen Sie den Fehler ab und behandeln Sie ihn
-            echo "<p class='text-center bg-red-700 border rounded border-gray-700'>". "Fehler beim Ausführen des SQL-Statements: " . $e->getMessage() . "</p>";
+            if (!checkDatesInArray($newRowValues)) {
+                echo "<p class='text-center bg-red-700 border rounded border-gray-700'>". "Datum wurde nicht Regelkonform eingegeben YYYY-MM-DD". "</p>";
+            } else {
+                echo "<p class='text-center bg-red-700 border rounded border-gray-700'>" . "Fehler beim Ausführen des SQL-Statements: " . $e->getMessage() . "</p>";
+            }
         }
 
     }
-
 
 
     // reset database if empty
@@ -95,4 +98,23 @@ function getTableDataByURL(): void {
         resetDB();
     }
 
+}
+
+function checkDatesInArray($array) {
+    foreach ($array as $item) {
+        // Überprüfen, ob das Element ein Datum im Format 'YYYY-MM-DD' ist
+        if (preg_match("/\d{4}-\d{2}-\d{2}/", $item)) {
+            // Zerlegen des Datums in Jahr, Monat und Tag
+            list($year, $month, $day) = explode("-", $item);
+
+            // Überprüfen, ob das Datum gültig ist
+            if (!checkdate((int)$month, (int)$day, (int)$year)) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
 }
