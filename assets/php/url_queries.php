@@ -77,6 +77,8 @@ function getTableDataByURL(): void {
         try {
             // Versuchen Sie, das Statement auszuführen
             $stmt->execute();
+            header("Refresh:0");
+            exit();
         } catch (mysqli_sql_exception $e) {
             // Fangen Sie den Fehler ab und behandeln Sie ihn
             echo "<p class='text-center bg-red-700 border rounded border-gray-700'>". "Fehler beim Ausführen des SQL-Statements: " . $e->getMessage() . "</p>";
