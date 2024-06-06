@@ -66,6 +66,8 @@ function getTableDataByURL(): void {
         $columns = implode(", ", $fields);
         $placeholders = rtrim(str_repeat('?, ', count($newRowValues)), ', ');
 
+        $newRowValues = str_replace(",",".", $newRowValues);
+
         // Prepare sql statement
         $sql = "INSERT INTO $selectedTable ($columns) VALUES ($placeholders)";
 
