@@ -7,3 +7,8 @@ require_once 'assets/php/table.php';
 if (!empty($_POST['reset_db'])) {
     resetDB(true);
 }
+
+// delete row from table
+if (!empty($_POST['deleteRow'])) {
+    deleteRow($_POST['deleteRow']);
+}
