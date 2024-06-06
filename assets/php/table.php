@@ -5,6 +5,23 @@ $tableData = [];
 
 $current_table = "Wähle eine Tabelle in dem rechten Dropdown-Menü aus.";
 
+function executeSql($conn, $sql, $params) {
+    // Bereiten Sie das SQL-Statement vor
+    $stmt = $conn->prepare($sql);
+
+    // Binden Sie die Parameter an das vorbereitete Statement
+    $stmt->bind_param(str_repeat('s', count($params)), ...$params);
+
+    // Führen Sie das vorbereitete Statement aus
+    if ($stmt->execute()) {
+        echo "SQL statement executed successfully.";
+    } else {
+        echo "Error executing SQL statement: " . $stmt->error;
+    }
+}
+
+
+
 // get Table data
 function getAllTableData($column = null, $statement = null): array {
     global $conn;
@@ -78,13 +95,21 @@ function buildTableHeaders(): void {
 function buildTableRows(): void {
     global $tableData;
     $idCounter = 1; // Zähler für die eindeutige ID
+
+    // Neue Zeile mit Eingabefeldern
+    echo '<form><tr id="newRow" style="display: none">';
+    foreach ($tableData[0] as $cell) {
+        echo '<td><input class="bg-gray-700" type="text" name="newRow[]"></td>';
+    }
+    echo '<td><input type="submit" value="Hinzufügen"></td>';
+    echo '</tr> </form';
+
     // Loop through each row of data and create a <tr> element
     foreach ($tableData as $row) {
         echo '<tr>';
-        $cellCounter = 0; // Zähler für die Zellen
+        $cellCounter = 0;
         // Loop through each column in the row and create a <td> element
         foreach ($row as $cell) {
-            // Wenn es sich um die erste Zelle handelt, fügen Sie die ID hinzu
             if ($cellCounter == 0) {
                 echo '<td id="cell-' . $idCounter . '" class=" px-4 py-4 text-sm font-medium whitespace-nowrap">';
             } else {
@@ -92,7 +117,7 @@ function buildTableRows(): void {
             }
             echo htmlspecialchars($cell); // Use htmlspecialchars to prevent XSS attacks
             echo '</td>';
-            $cellCounter++; // Erhöhen Sie den Zähler für die Zellen
+            $cellCounter++;
         }
 
         // EDIT & DELETE BUTTON
@@ -117,6 +142,6 @@ function buildTableRows(): void {
                 </div>
             </td>';
         echo '</tr>';
-        $idCounter++; // Erhöhen Sie den Zähler für die IDs
+        $idCounter++;
     }
 }
