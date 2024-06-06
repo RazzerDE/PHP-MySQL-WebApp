@@ -16,7 +16,17 @@ function getTableDataByURL(): void {
         getAllTableData();
     }
 
-    $selectedTable = $_GET['dropdownSelect'] ?? 'buecher';
+    if (isset($_GET['sql_statement'])) {
+      $sql = $_GET['sql_statement'];
+
+      preg_match('/FROM\s+(\w+)/i', $sql, $matches);
+      $selectedTable = $matches[1];
+
+    } else if (isset($_GET['dropdownSelect'])) {
+        $selectedTable = $_GET['dropdownSelect'];
+    } else {
+        $selectedTable = 'buecher';
+    }
 
     $fields = [];
     switch ($selectedTable) {

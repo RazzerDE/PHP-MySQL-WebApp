@@ -115,6 +115,7 @@ function buildTableRows(): void {
     echo '<td><input type="submit" value="Hinzufügen"></td>';
     echo '</tr> </form';
 
+
     // Loop through each row of data and create a <tr> element
     foreach ($tableData as $row) {
         echo '<tr>';
