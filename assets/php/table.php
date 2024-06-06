@@ -2,35 +2,45 @@
 require_once 'assets/php/main.php';
 
 $tableData = [];
+$columnNames = null;
+$tableName = null;
 
-$current_table = "Wähle eine Tabelle in dem rechten Dropdown-Menü aus.";
+$current_table = $_GET['dropdownSelect'] ?? "Wähle eine Tabelle in dem rechten Dropdown-Menü aus.";
 
 // get Table data
-function getAllTableData($column = null, $statement = null): array {
+function getAllTableData($table = null, $statement = null, $only_table = null): array {
     global $conn;
     global $tableData;
 
-    if ($column == null) {
-        $column = "buecher";
+    if ($table == null) {
+        $table = "buecher";
+    }
+
+    if ($only_table != null) {
+        global $tableName;
+        $tableName = $table;
+
+        return [];
     }
 
     if ($statement != null) {
         $SQL = str_replace(";", "", $statement);
     } else {
-        $SQL = 	"SELECT * FROM ". $column;
-    }
-
-    $result = $conn->query($SQL);
-    while($row = $result->fetch_assoc()){
-        $tableData[] = $row;
+        $SQL = 	"SELECT * FROM ". $table;
     }
 
     // sort table based on filter
     if (isset($_GET['filterBy'])) {
         // Diese SQL-Abfrage wäre nicht nur enorm schneller, sondern auch leichter - aber ihre Aufgabe will leider etwas anderes.
-        // $SQL .= " ORDER BY ".$_GET['filterBy']." ASC";
+        $SQL .= " ORDER BY ".$_GET['filterBy']." ASC";
 
-        $tableData = selectionSort($tableData, $_GET['filterBy']);
+        // Dieser Code würde den "selectionSort"-Algorithmus verwenden, welcher sehr bekannt in PHP ist.
+        // $tableData = selectionSort($tableData, $_GET['filterBy']);
+    }
+
+    $result = $conn->query($SQL);
+    while($row = $result->fetch_assoc()){
+        $tableData[] = $row;
     }
 
     return $tableData;
@@ -40,6 +50,7 @@ function getAllTableData($column = null, $statement = null): array {
 
 function buildTableHeaders(): void {
     global $tableData;
+    global $columnNames;
 
     // Get column names from the first row of the result set
     $columnNames = array_keys($tableData[0]);
@@ -77,25 +88,37 @@ function buildTableHeaders(): void {
 
 function buildTableRows(): void {
     global $tableData;
+    global $columnNames;
+
     // Loop through each row of data and create a <tr> element
     foreach ($tableData as $row) {
         echo '<tr>';
         // Loop through each column in the row and create a <td> element
+        $columnContent = null;
+
+        $count = 0;
         foreach ($row as $cell) {
+            if ($count === 0) {
+                $columnContent = htmlspecialchars($cell);
+            }
             echo '<td class="px-4 py-4 text-sm font-medium whitespace-nowrap">';
             echo htmlspecialchars($cell); // Use htmlspecialchars to prevent XSS attacks
             echo '</td>';
+
+            $count += 1;
         }
 
         // EDIT & DELETE BUTTON
         echo '
             <td class="px-4 py-4 text-sm whitespace-nowrap">
                 <div class="flex items-center gap-x-6">
-                    <button class="text-gray-300 transition-colors duration-200 hover:text-red-500 focus:outline-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                        </svg>
-                    </button>
+                    <form method="post">
+                        <button type="submit" name="deleteRow" value="' . $columnNames[0] . ' = '. $columnContent . '" class="text-gray-300 transition-colors duration-200 hover:text-red-500 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                            </svg>
+                        </button>
+                    </form>
 
                     <button class="transition-colors duration-200 hover:text-yellow-500 text-gray-300 focus:outline-none">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -103,7 +126,22 @@ function buildTableRows(): void {
                         </svg>
                     </button>
                 </div>
-            </td>';
-        echo '</tr>';
+            </td>
+        </tr>';
     }
+}
+
+// delete row from mysql database
+function deleteRow($DELETE_PARAMETER): void {
+    global $conn;
+    global $tableName;
+    echo $tableName;
+
+    getAllTableData(null, null, true);
+    $SQL = "DELETE FROM buchladen." . $tableName . " WHERE $DELETE_PARAMETER ";
+    $conn->query($SQL);
+
+    header("Refresh: 0");
+    exit();
+
 }
