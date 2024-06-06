@@ -5,7 +5,21 @@ $tableData = [];
 $columnNames = null;
 $tableName = null;
 
-$current_table = $_GET['dropdownSelect'] ?? "Wähle eine Tabelle in dem rechten Dropdown-Menü aus.";
+$current_table = "Wähle eine Tabelle in dem rechten Dropdown-Menü aus.";
+
+// get all tables from database
+function getTables(): array {
+    global $conn;
+    $SQL = "SHOW TABLES";
+    $tables = [];
+
+    $result = $conn->query($SQL);
+    while($row = $result->fetch_array()){
+        $tables[] = $row[0];
+    }
+
+    return $tables;
+}
 
 // get Table data
 function getAllTableData($table = null, $statement = null, $only_table = null): array {
@@ -26,7 +40,7 @@ function getAllTableData($table = null, $statement = null, $only_table = null): 
     if ($statement != null) {
         $SQL = str_replace(";", "", $statement);
     } else {
-        $SQL = 	"SELECT * FROM ". $table;
+        $SQL = 	"SELECT * FROM buchladen.". $table;
     }
 
     // sort table based on filter
