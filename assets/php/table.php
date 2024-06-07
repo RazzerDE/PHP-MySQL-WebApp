@@ -110,6 +110,7 @@ function buildTableHeaders() {
     echo '</tr>';
 }
 
+
 function buildTableRows() {
     global $tableData;
     $idCounter = 1; // Zähler für die eindeutige ID
@@ -133,10 +134,11 @@ function buildTableRows() {
         $columnContent = null;
 
         $count = 0;
-        $inputValues = []; // Array to store the values of the input fields
         foreach ($row as $cell) {
-            if ($count === 0) {
-                $columnContent = htmlspecialchars($cell);
+            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputValue".$count])) {
+                $inputValue = htmlspecialchars($_POST["inputValue".$count]);
+            } else {
+                $inputValue = htmlspecialchars($cell);
             }
 
             echo '<form name="editRow" method="post" id="editRowForm'.$columnContent.'">';
@@ -144,8 +146,7 @@ function buildTableRows() {
             if ($count === 0) {
                 echo htmlspecialchars($cell); // Erster Wert ist kein Eingabefeld
             } else {
-                $inputValue = htmlspecialchars($cell);
-                echo '<input class="bg-gray-900" value="'.$inputValue.'">';
+                echo '<input class="bg-gray-900" name="inputValue'.$count.'" value="'.$inputValue.'">';
                 $inputValues[] = " ".$inputValue; // Add the value to the array
             }
             echo '</td>';
@@ -153,6 +154,7 @@ function buildTableRows() {
 
             $count += 1;
         }
+
 
         // Convert the array of input values to a string
         $inputValuesString = implode(",", $inputValues);
@@ -182,7 +184,6 @@ function buildTableRows() {
         </tr>';
     }
 }
-
 
 
 
