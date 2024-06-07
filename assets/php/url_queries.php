@@ -59,38 +59,6 @@ function getTableDataByURL(): void {
             break;
     }
 
-    if (isset($_POST['editRow'])) {
-        $editRowValues = $_POST['editRow'];
-
-        $columns = implode(", ", $fields);
-        $placeholders = rtrim(str_repeat('?, ', count($editRowValues)), ', ');
-
-        $newRowValues = str_replace(",",".", $editRowValues);
-
-        // Prepare sql statement
-        $sql = "INSERT INTO $selectedTable ($columns) VALUES ($placeholders)";
-
-        $stmt = $conn->prepare($sql);
-
-        $types = str_repeat('s', count($newRowValues)); // 's' mean string
-        $stmt->bind_param($types, ...$newRowValues);
-
-        try {
-            // Versuchen Sie, das Statement auszuführen
-            $stmt->execute();
-            header("Refresh:0");
-            exit();
-        } catch (mysqli_sql_exception $e) {
-            // Fangen Sie den Fehler ab und behandeln Sie ihn
-            if (!checkDatesInArray($newRowValues)) {
-                echo "<p class='text-center bg-red-700 border rounded border-gray-700'>". "Datum wurde nicht Regelkonform eingegeben YYYY-MM-DD". "</p>";
-            } else {
-                echo "<p class='text-center bg-red-700 border rounded border-gray-700'>" . "Fehler beim Ausführen des SQL-Statements: " . $e->getMessage() . "</p>";
-            }
-        }
-
-    }
-
     if (isset($_POST['newRow'])) {
         $newRowValues = $_POST['newRow'];
 
