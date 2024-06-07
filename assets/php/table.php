@@ -135,13 +135,16 @@ function buildTableRows() {
 
         $count = 0;
         foreach ($row as $cell) {
+            if ($count === 0) {
+                $columnContent = htmlspecialchars($cell);
+            }
             if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputValue".$count])) {
                 $inputValue = htmlspecialchars($_POST["inputValue".$count]);
             } else {
                 $inputValue = htmlspecialchars($cell);
             }
 
-            echo '<form name="editRow" method="post" id="editRowForm'.$columnContent.'">';
+            echo '<form name="editRow" method="post" id="editRowForm">';
             echo '<td class="px-4 py-4 text-sm font-medium whitespace-nowrap">';
             if ($count === 0) {
                 echo htmlspecialchars($cell); // Erster Wert ist kein Eingabefeld
