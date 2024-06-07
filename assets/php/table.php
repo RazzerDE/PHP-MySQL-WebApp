@@ -114,6 +114,7 @@ function buildTableHeaders() {
 function buildTableRows() {
     global $tableData;
     global $columnNames;
+    $dom = new DOMDocument;
 
     // Neue Zeile mit Eingabefeldern
     echo '<form method="post" id="newRowForm"><tr id="newRow" style="display: none">';
