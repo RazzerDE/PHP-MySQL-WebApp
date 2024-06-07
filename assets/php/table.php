@@ -113,7 +113,6 @@ function buildTableHeaders() {
 
 function buildTableRows() {
     global $tableData;
-    $idCounter = 1; // Zähler für die eindeutige ID
     global $columnNames;
 
     // Neue Zeile mit Eingabefeldern
