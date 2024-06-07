@@ -4,7 +4,6 @@
 document.getElementById("SearchForm").addEventListener("submit", function(event) {
     let input = document.getElementById("sql_statement");
 
-    // verify sql statement
     if (!isValidSelectStatement(input.value)) {
         input.style.borderColor = "red";
         event.preventDefault();
@@ -42,6 +41,6 @@ elements.forEach(element => {
 //      FUNCTIONS
 
 function isValidSelectStatement(sql) {
-    const regex = /^SELECT\s[\w\*\)\(\,\s]+\sFROM\s[\w]+$/i;
-    return regex.test(sql);
+    const pattern = "SELECT\\s+(\\w+)\\s*((,\\s*\\w+\\s*)*)\\s+FROM\\s+\\w+\\s+WHERE\\s+\\w+\\s*(<|>|<>|<=|>=|=)\\s*[+-]?\\d+$";
+    return pattern.test(sql);
 }
