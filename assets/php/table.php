@@ -138,8 +138,9 @@ function buildTableRows() {
             if ($count === 0) {
                 $columnContent = htmlspecialchars($cell);
             }
-            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputValue".$count])) {
-                $inputValue = htmlspecialchars($_POST["inputValue".$count]);
+            $rowId = $columnContent;
+            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputValue".$rowId.'_'.$count])) {
+                $inputValue = htmlspecialchars($_POST["inputValue".$rowId.'_'.$count]);
             } else {
                 $inputValue = htmlspecialchars($cell);
             }
@@ -149,7 +150,7 @@ function buildTableRows() {
             if ($count === 0) {
                 echo htmlspecialchars($cell); // Erster Wert ist kein Eingabefeld
             } else {
-                echo '<input class="bg-gray-900" name="inputValue'.$count.'" value="'.$inputValue.'">';
+                echo '<input class="bg-gray-900" name="inputValue'.$rowId.'_'.$count.'" value="'.$inputValue.'">';
                 $inputValues[] = " ".$inputValue; // Add the value to the array
             }
             echo '</td>';
@@ -187,6 +188,7 @@ function buildTableRows() {
         </tr>';
     }
 }
+
 
 
 
