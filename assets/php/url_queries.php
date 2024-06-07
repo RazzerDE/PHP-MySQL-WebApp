@@ -2,7 +2,7 @@
 
 #       MODIFY TABLE BASED ON URL_QUERIES
 
-function getTableDataByURL(): void {
+function getTableDataByURL() {
     global $conn;
     global $tableData;
 
@@ -91,6 +91,27 @@ function getTableDataByURL(): void {
 
     }
 
+    if (isset($_POST['sRow'])) {
+        $newRowValues = $_POST['inputValues'];
+        $id = $_POST['editRow'];
+
+
+        // Prepare sql statement
+        $sql = "UPDATE $selectedTable SET * (".$newRowValues . ") WHERE ". $id;
+
+        $stmt = $conn->prepare($sql);
+
+        try {
+            // Versuchen Sie, das Statement auszuführen
+            $stmt->execute();
+            header("Refresh:0");
+            exit();
+        } catch (mysqli_sql_exception $e) {
+            echo "<p class='text-center bg-red-700 border rounded border-gray-700'>" . "Fehler beim Ausführen des SQL-Statements: " . $e->getMessage() . "</p>";
+        }
+
+    }
+
 
     // reset database if empty
     if (empty($tableData)) {
@@ -98,7 +119,7 @@ function getTableDataByURL(): void {
     }
 }
 
-function checkDatesInArray($array): bool {
+function checkDatesInArray($array) {
     foreach ($array as $item) {
         // Überprüfen, ob das Element ein Datum im Format 'YYYY-MM-DD' ist
         if (preg_match("/\d{4}-\d{2}-\d{2}/", $item)) {

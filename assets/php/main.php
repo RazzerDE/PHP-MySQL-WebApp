@@ -24,7 +24,7 @@ try {
     exit();
 }
 
-function resetDB($redirected = False): void {
+function resetDB($redirected = False) {
     global $conn;
 
     $filename = 'assets/sql/buchladen.sql';
@@ -57,7 +57,7 @@ function resetDB($redirected = False): void {
 
 }
 
-function selectionSort($tableData, $attribute): array {
+function selectionSort($tableData, $attribute) {
     $n = count($tableData);
     for ($i = 0; $i < $n; $i++) {
         $minIndex = $i;

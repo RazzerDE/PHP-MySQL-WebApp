@@ -16,3 +16,7 @@ if (!empty($_POST['deleteRow'])) {
 if (!empty($_POST['editRow'])) {
     echo $_POST['editRow'];
 }
+
+if (!empty($_POST['inputValues'])) {
+    echo $_POST['inputValues'];
+}
