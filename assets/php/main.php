@@ -3,7 +3,7 @@ $servername = "localhost";
 $database = "buchladen";
 $username = "root";
 # TODO: CHANGE PASSWORD FOR XAMP!
-$password = "root";
+$password = "";
 
 // Create connection
 try {
@@ -73,6 +73,26 @@ function selectionSort($tableData, $attribute) {
     }
 
     return $tableData;
+}
+
+function checkDatesInArray($array) {
+    foreach ($array as $item) {
+        // Überprüfen, ob das Element ein Datum im Format 'YYYY-MM-DD' ist
+        if (preg_match("/\d{4}-\d{2}-\d{2}/", $item)) {
+            // Zerlegen des Datums in Jahr, Monat und Tag
+            list($year, $month, $day) = explode("-", $item);
+
+            // Überprüfen, ob das Datum gültig ist
+            if (!checkdate((int)$month, (int)$day, (int)$year)) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+    return true;
 }
 
 

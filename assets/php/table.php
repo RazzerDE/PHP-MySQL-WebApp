@@ -55,7 +55,6 @@ function getAllTableData($table = null, $statement = null) {
 
     // sort table based on filter
     if (isset($_GET['filterBy'])) {
-        // Diese SQL-Abfrage wäre nicht nur enorm schneller, sondern auch leichter - aber ihre Aufgabe will leider etwas anderes.
         $SQL .= " ORDER BY ".$_GET['filterBy']." ASC";
 
         // Dieser Code würde den "selectionSort"-Algorithmus verwenden, welcher sehr bekannt in PHP ist.
@@ -103,7 +102,7 @@ function buildTableHeaders() {
     // EDIT & DELETE HEADER
     echo '
         <th scope="col" class="py-3.5 px-4 text-sm font-normal text-left text-gray-400">
-            <span>Eintrag Edit</span>
+            <span>Aktion</span>
         </th>';
 
     // End the table row
@@ -113,18 +112,21 @@ function buildTableHeaders() {
 
 function buildTableRows() {
     global $tableData;
-    $idCounter = 1; // Zähler für die eindeutige ID
     global $columnNames;
 
-    // Neue Zeile mit Eingabefeldern
-    echo '<form method="post" id="newRowForm"><tr id="newRow" style="display: none">';
+    // Add hidden row to the top in case user wants to add one to the table
+    $form = '<form method="post" id="newRowForm"><tr id="newRow" style="display: none">';
     foreach ($tableData[0] as $cell) {
-        echo '<td><input class="bg-gray-700" type="text" name="newRow[]"></td>';
+        $form .= '<td><input class="bg-gray-700" type="text" name="newRow[]"></td>';
     }
-    echo '<td>
-        <input value=" " class="cursor-pointer ml-14" type="submit" style="background: url(https://img.icons8.com/material-rounded/24/FFFFFF/save.png) no-repeat center; width: 24px; height: 24px; border: none;">
-         </td>';
-    echo '</tr> </form';
+    $form .= '<td>
+                <button type="submit" class="text-gray-300 transition-colors duration-200 hover:text-red-500 focus:outline-none ml-14 mt-2" >
+                    <img src="/assets/img/floppy-disk.png" width="24" height="24"  alt=""/>
+                </button>
+             </td>';
+    $form .= '</tr> </form>';
+
+    echo $form;
 
 
     // Loop through each row of data and create a <tr> element
@@ -145,23 +147,22 @@ function buildTableRows() {
                 $inputValue = htmlspecialchars($cell);
             }
 
-            echo '<form name="editRow" method="post" id="editRowForm">';
+//            echo '<form name="editRow" method="post" id="editRowForm">';
             echo '<td class="px-4 py-4 text-sm font-medium whitespace-nowrap">';
             if ($count === 0) {
                 echo htmlspecialchars($cell); // Erster Wert ist kein Eingabefeld
             } else {
                 echo '<input class="bg-gray-900" name="inputValue'.$rowId.'_'.$count.'" value="'.$inputValue.'">';
-                $inputValues[] = " ".$inputValue; // Add the value to the array
+//                $inputValues[] = " ".$inputValue; // Add the value to the array
             }
-            echo '</td>';
-            echo '</form>';
-
+////
+//            echo '</td></form>';
             $count += 1;
         }
 
 
         // Convert the array of input values to a string
-        $inputValuesString = implode(",", $inputValues);
+//        $inputValuesString = implode(",", $inputValues);
 
         // EDIT & DELETE BUTTON
         echo '
@@ -175,14 +176,11 @@ function buildTableRows() {
                         </button>
                     </form>
 
-                    <form id="editRowForm" method="post">
-                    <input type="hidden" name="inputValues" value="'.$inputValuesString.'"> <!-- Hidden input field to store the values of the input fields -->
                     <button type="submit" name="editRow" value="' . $columnNames[0] . ' = '. $columnContent . ' " class="transition-colors duration-200 hover:text-yellow-500 text-gray-300 focus:outline-none">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                             </svg>
                         </button>
-                    </form>
                 </div>
             </td>
         </tr>';
