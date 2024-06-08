@@ -141,11 +141,16 @@ function buildTableRows() {
             }
 
             echo '<td class="px-4 py-4 text-sm font-medium whitespace-nowrap">';
-            if ($count === 0) {
-                echo htmlspecialchars($cell); // Erster Wert ist kein Eingabefeld
-            } else {
-                echo '<input id="editInp" disabled class="editInp-'.$columnContent.' rounded w-full bg-gray-900" name="editRow[' . $columnNames[$count] . ']" value="' . htmlspecialchars($cell) . '">';
-                echo '<input type="hidden" name="rowId" value="' . $columnNames[0] . ' = '. $columnContent .  '">';
+            if (strpos(getTableName(), '_has_') !== false) {
+                echo htmlspecialchars($cell);
+            }
+            else {
+                if ($count === 0) {
+                    echo htmlspecialchars($cell); // Erster Wert ist kein Eingabefeld
+                } else {
+                    echo '<input id="editInp" disabled class="editInp-' . $columnContent . ' rounded w-full bg-gray-900" name="editRow[' . $columnNames[$count] . ']" value="' . htmlspecialchars($cell) . '">';
+                    echo '<input type="hidden" name="rowId" value="' . $columnNames[0] . ' = ' . $columnContent . '">';
+                }
             }
             echo '</td>';
 
@@ -171,13 +176,21 @@ function buildTableRows() {
                               <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.108 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                             </svg>
                         </button>
-                    </form>
-                    <button onclick="editMode('.$columnContent.')" id="edit" class="transition-colors duration-200 hover:text-yellow-500 text-gray-300 focus:outline-none">
+                    </form>';
+        if (strpos(getTableName(), '_has_') !== false) {
+            echo        '<button class="cursor-not-allowed transition-colors duration-200 text-gray-800 focus:outline-none">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                         </svg>
-                    </button>
-                    <script>
+                    </button>';
+        } else {
+            echo        '<button onclick="editMode('.$columnContent.')" id="edit" class="transition-colors duration-200 hover:text-yellow-500 text-gray-300 focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                        </svg>
+                    </button>';
+        }
+        echo        '<script>
                         function editMode(id) {
                             let input = document.querySelectorAll(`.editInp-`+id);
                             let save = document.querySelectorAll(`#editSave-`+id);
