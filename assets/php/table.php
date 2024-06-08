@@ -120,12 +120,7 @@ function buildTableRows() {
     }
     $form .= '<td>
                 <button type="submit" class="text-gray-300 transition-colors duration-200 hover:text-red-500 focus:outline-none ml-14 mt-2" >
-                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" x="0" y="0" viewBox="0 0 32 32" style="enable-background:new 0 0 512 512" xml:space="preserve" class="">
-            <g>
-                <path d="m30.71 7.29-6-6A1 1 0 0 0 24 1h-2v8a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2V1H4a3 3 0 0 0-3 3v24a3 3 0 0 0 3 3h2v-9a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v9h2a3 3 0 0 0 3-3V8a1 1 0 0 0-.29-.71z" fill="#FFFFFF" opacity="1" data-original="#000000" class=""></path>
-                <path d="M12 1h8v8h-8zM23 21H9a1 1 0 0 0-1 1v9h16v-9a1 1 0 0 0-1-1z" fill="#FFFFFF" opacity="1" data-original="#000000" class=""></path>
-            </g>
-        </svg>
+                    <img src="/assets/img/floppy-disk.png" width="24" height="24"  alt=""/>
                 </button>
              </td>';
     $form .= '</tr> </form>';
@@ -156,12 +151,19 @@ function buildTableRows() {
 
             $count += 1;
         }
+        echo '<td id="editSave-'.$columnContent.'" style="display: none">
+                <button type="submit" class="text-gray-300 transition-colors duration-200 hover:text-red-500 focus:outline-none ml-14 mt-2" >
+                    <img src="/assets/img/floppy-disk.png" width="24" height="24"  alt=""/>
+                </button>
+             </td>';
+        echo '</form>';
+
         echo '<input type="submit" hidden="hidden" value=" ">';
         echo '</form>';
 
         // DELETE BUTTON
         echo '
-            <td class="px-4 py-4 text-sm whitespace-nowrap">
+            <td id="editButton-'.$columnContent.'" class="px-4 py-4 text-sm whitespace-nowrap">
                 <div class="flex items-center gap-x-6">
                     <form method="post" id="deleteRowForm">
                         <button type="submit" name="deleteRow" value="' . $columnNames[0] . ' = '. $columnContent .  ' " class="text-gray-300 transition-colors duration-200 hover:text-red-500 focus:outline-none">
@@ -177,13 +179,22 @@ function buildTableRows() {
                     </button>
                     <script>
                         function editMode(id) {
-                            let element = document.querySelectorAll(`.editInp-`+id);
+                            let input = document.querySelectorAll(`.editInp-`+id);
+                            let save = document.querySelectorAll(`#editSave-`+id);
+                            let edit = document.querySelectorAll(`#editButton-`+id);
                             
-                            element.forEach((element) => {
-                                element.classList.add(`bg-gray-600`);   
-                                element.disabled = false;
+                            input.forEach((e) => {
+                                e.classList.add(`bg-gray-600`);   
+                                e.disabled = false;
                             });
                             
+                            save.forEach((e) => {
+                               e.style.display = ""; 
+                            });
+                            
+                            edit.forEach((e) => {
+                                e.style.display = "none";
+                            })
                             
                         }
                     </script>
