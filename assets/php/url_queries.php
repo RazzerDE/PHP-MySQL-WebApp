@@ -87,48 +87,41 @@ function insertNewRow($selectedTable, $fields) {
 function updateRow($selectedTable, $fields) {
     global $conn;
 
-    // Entfernen Sie das erste Element aus dem Array $fields
-    array_shift($fields);
-
-    $newRowValues = explode(',', $_POST['inputValues']);
-    $id = $_POST['editRow'];
+    $newRowValues = $_POST['editRow'];
+    $id = $_POST['rowId'];
 
     $setStatement = "";
-    for ($i = 0; $i < count($fields); $i++) {
-        // Trim the values and add quotes around them if they are strings
-        $value = trim($newRowValues[$i]);
-        if (!is_numeric($value)) {
-            $value = "'" . $conn->real_escape_string($value) . "'";
-        }
-        $setStatement .= trim($fields[$i]) . " = " . $value;
-        if ($i != count($fields) - 1) {
-            $setStatement .= ", ";
+
+    // Durchlaufen Sie die Felder und newRowValues Arrays, beginnend bei Index 1
+    for($i = 1; $i < count($fields); $i++){
+        // Überprüfen Sie, ob das Feld im newRowValues Array existiert
+        if(array_key_exists($fields[$i], $newRowValues)){
+            // Fügen Sie jedes Feld und seinen neuen Wert dem setStatement hinzu
+            $setStatement .= $fields[$i] . " = '" . $newRowValues[$fields[$i]] . "'";
+            // Fügen Sie ein Komma hinzu, wenn es nicht das letzte Element ist
+            if($i != count($fields) - 1){
+                $setStatement .= ", ";
+            }
         }
     }
 
-    // Prepare sql statement
     $sql = "UPDATE $selectedTable SET ". $setStatement ." WHERE ". $id;
 
     $stmt = $conn->prepare($sql);
 
     try {
-        // Versuchen Sie, das Statement auszuführen
         $stmt->execute();
         header("Refresh:0");
         exit();
     } catch (mysqli_sql_exception $e) {
-        // Fangen Sie den Fehler ab und behandeln Sie ihn
         handleSqlException($e, $newRowValues);
     }
 }
 
 
+
 function handleSqlException($e, $newRowValues) {
-    if (!checkDatesInArray($newRowValues)) {
-        echo "<p class='text-center bg-red-700 border rounded border-gray-700'>". "Datum wurde nicht Regelkonform eingegeben YYYY-MM-DD". "</p>";
-    } else {
-        echo "<p class='text-center bg-red-700 border rounded border-gray-700'>" . "Fehler beim Ausführen des SQL-Statements: " . $e->getMessage() . "</p>";
-    }
+    echo "<p class='text-center bg-red-700 border rounded border-gray-700'>" . "Fehler beim Ausführen des SQL-Statements: " . $e->getMessage() . "</p>";
 }
 
 function checkDatesInArray($array) {

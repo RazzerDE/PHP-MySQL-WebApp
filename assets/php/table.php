@@ -115,16 +115,6 @@ function buildTableRows() {
     global $columnNames;
     $dom = new DOMDocument;
 
-    // Neue Zeile mit Eingabefeldern
-    echo '<form method="post" id="newRowForm"><tr id="newRow" style="display: none">';
-    foreach ($tableData[0] as $cell) {
-        echo '<td><input class="bg-gray-700" type="text" name="newRow[]"></td>';
-    }
-    echo '<td>
-        <input value=" " class="cursor-pointer ml-14" type="submit" style="background: url(https://img.icons8.com/material-rounded/24/FFFFFF/save.png) no-repeat center; width: 24px; height: 24px; border: none;">
-         </td>';
-    echo '</tr> </form>';
-
     // Loop through each row of data and create a <tr> element
     foreach ($tableData as $row) {
         echo '<tr>';
@@ -137,23 +127,19 @@ function buildTableRows() {
             if ($count === 0) {
                 $columnContent = htmlspecialchars($cell);
             }
-            $rowId = $columnContent;
-            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputValue".$rowId.'_'.$count])) {
-                $inputValue = htmlspecialchars($_POST["inputValue".$rowId.'_'.$count]);
-            } else {
-                $inputValue = htmlspecialchars($cell);
-            }
 
             echo '<td class="px-4 py-4 text-sm font-medium whitespace-nowrap">';
             if ($count === 0) {
                 echo htmlspecialchars($cell); // Erster Wert ist kein Eingabefeld
             } else {
-                echo '<input class="w-full bg-gray-900" name="inputValue'.$rowId.'_'.$count.'" value="'.$inputValue.'">';
+                echo '<input class="w-full bg-gray-900" name="editRow[' . $columnNames[$count] . ']" value="' . htmlspecialchars($cell) . '">';
+                echo '<input type="hidden" name="rowId" value="' . $columnNames[0] . ' = '. $columnContent .  '">';
             }
             echo '</td>';
 
             $count += 1;
         }
+        echo '<input type="submit" hidden="hidden" value=" ">';
         echo '</form>';
 
         // DELETE BUTTON
