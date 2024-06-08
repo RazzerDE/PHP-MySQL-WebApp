@@ -150,7 +150,7 @@ function buildTableRows() {
             if ($count === 0) {
                 echo htmlspecialchars($cell); // Erster Wert ist kein Eingabefeld
             } else {
-                echo '<input class="bg-gray-900" name="inputValue'.$rowId.'_'.$count.'" value="'.$inputValue.'">';
+                echo '<input class="w-full bg-gray-900" name="inputValue'.$rowId.'_'.$count.'" value="'.$inputValue.'">';
                 $inputValues[] = " ".$inputValue; // Add the value to the array
             }
             echo '</td>';

@@ -3,7 +3,7 @@ $servername = "localhost";
 $database = "buchladen";
 $username = "root";
 # TODO: CHANGE PASSWORD FOR XAMP!
-$password = "";
+$password = "root";
 
 // Create connection
 try {

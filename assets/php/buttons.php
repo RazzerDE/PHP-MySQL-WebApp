@@ -13,6 +13,6 @@ if (!empty($_POST['deleteRow'])) {
     deleteRow($_POST['deleteRow']);
 }
 
-if (!empty($_POST['inputValue'])) {
-    echo $_POST['inputValue'];
+if (!empty($_POST['inputValues'])) {
+    echo $_POST['inputValues'];
 }

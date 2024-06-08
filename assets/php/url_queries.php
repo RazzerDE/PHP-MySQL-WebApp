@@ -52,6 +52,7 @@ function getFieldsForTable($selectedTable) {
     if (array_key_exists($selectedTable, $tables)) {
         $fields = $tables[$selectedTable];
     }
+
     return $fields;
 }
 
@@ -86,6 +87,9 @@ function insertNewRow($selectedTable, $fields) {
 function updateRow($selectedTable, $fields) {
     global $conn;
 
+    // Entfernen Sie das erste Element aus dem Array $fields
+    array_shift($fields);
+
     $newRowValues = explode(',', $_POST['inputValues']);
     $id = $_POST['editRow'];
 
@@ -117,6 +121,7 @@ function updateRow($selectedTable, $fields) {
         handleSqlException($e, $newRowValues);
     }
 }
+
 
 function handleSqlException($e, $newRowValues) {
     if (!checkDatesInArray($newRowValues)) {
