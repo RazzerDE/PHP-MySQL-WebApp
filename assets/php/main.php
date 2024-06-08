@@ -24,7 +24,7 @@ try {
     exit();
 }
 
-function resetDB($redirected = False): void {
+function resetDB($redirected = False) {
     global $conn;
 
     $filename = 'assets/sql/buchladen.sql';
@@ -57,7 +57,7 @@ function resetDB($redirected = False): void {
 
 }
 
-function selectionSort($tableData, $attribute): array {
+function selectionSort($tableData, $attribute) {
     $n = count($tableData);
     for ($i = 0; $i < $n; $i++) {
         $minIndex = $i;
@@ -73,6 +73,26 @@ function selectionSort($tableData, $attribute): array {
     }
 
     return $tableData;
+}
+
+function checkDatesInArray($array) {
+    foreach ($array as $item) {
+        // Überprüfen, ob das Element ein Datum im Format 'YYYY-MM-DD' ist
+        if (preg_match("/\d{4}-\d{2}-\d{2}/", $item)) {
+            // Zerlegen des Datums in Jahr, Monat und Tag
+            list($year, $month, $day) = explode("-", $item);
+
+            // Überprüfen, ob das Datum gültig ist
+            if (!checkdate((int)$month, (int)$day, (int)$year)) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+    return true;
 }
 
 

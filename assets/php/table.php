@@ -8,7 +8,7 @@ $tableName = null;
 $current_table = "Wähle eine Tabelle in dem rechten Dropdown-Menü aus.";
 
 // get table name
-function getTableName(): string {
+function getTableName() {
     if (isset($_GET['sql_statement'])) {
         preg_match('/FROM\s+(\w+)/i', str_replace("+", "", $_GET['sql_statement']), $matches);
         $tableName = $matches[1];
@@ -22,7 +22,7 @@ function getTableName(): string {
 }
 
 // get all tables from database
-function getTables(): array {
+function getTables() {
     global $conn;
     $SQL = "SHOW TABLES";
     $tables = [];
@@ -35,8 +35,9 @@ function getTables(): array {
     return $tables;
 }
 
+
 // get Table data
-function getAllTableData($table = null, $statement = null): array {
+function getAllTableData($table = null, $statement = null) {
     global $conn;
     global $tableData;
     global $tableName;
@@ -54,7 +55,6 @@ function getAllTableData($table = null, $statement = null): array {
 
     // sort table based on filter
     if (isset($_GET['filterBy'])) {
-        // Diese SQL-Abfrage wäre nicht nur enorm schneller, sondern auch leichter - aber ihre Aufgabe will leider etwas anderes.
         $SQL .= " ORDER BY ".$_GET['filterBy']." ASC";
 
         // Dieser Code würde den "selectionSort"-Algorithmus verwenden, welcher sehr bekannt in PHP ist.
@@ -71,7 +71,7 @@ function getAllTableData($table = null, $statement = null): array {
 
 //          FUNCTIONS TO BUILD DESIGN OF PAGE
 
-function buildTableHeaders(): void {
+function buildTableHeaders() {
     global $tableData;
     global $columnNames;
 
@@ -102,16 +102,32 @@ function buildTableHeaders(): void {
     // EDIT & DELETE HEADER
     echo '
         <th scope="col" class="py-3.5 px-4 text-sm font-normal text-left text-gray-400">
-            <span>Eintrag Edit</span>
+            <span>Aktion</span>
         </th>';
 
     // End the table row
     echo '</tr>';
 }
 
-function buildTableRows(): void {
+
+function buildTableRows() {
     global $tableData;
     global $columnNames;
+
+    // Add hidden row to the top in case user wants to add one to the table
+    $form = '<form method="post" id="newRowForm"><tr id="newRow" style="display: none">';
+    foreach ($tableData[0] as $cell) {
+        $form .= '<td><input class="bg-gray-700" type="text" name="newRow[]"></td>';
+    }
+    $form .= '<td>
+                <button type="submit" class="text-gray-300 transition-colors duration-200 hover:text-red-500 focus:outline-none ml-14 mt-2" >
+                    <img src="/assets/img/floppy-disk.png" width="24" height="24"  alt=""/>
+                </button>
+             </td>';
+    $form .= '</tr> </form>';
+
+    echo $form;
+
 
     // Loop through each row of data and create a <tr> element
     foreach ($tableData as $row) {
@@ -124,38 +140,58 @@ function buildTableRows(): void {
             if ($count === 0) {
                 $columnContent = htmlspecialchars($cell);
             }
-            echo '<td class="px-4 py-4 text-sm font-medium whitespace-nowrap">';
-            echo htmlspecialchars($cell); // Use htmlspecialchars to prevent XSS attacks
-            echo '</td>';
+            $rowId = $columnContent;
+            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputValue".$rowId.'_'.$count])) {
+                $inputValue = htmlspecialchars($_POST["inputValue".$rowId.'_'.$count]);
+            } else {
+                $inputValue = htmlspecialchars($cell);
+            }
 
+//            echo '<form name="editRow" method="post" id="editRowForm">';
+            echo '<td class="px-4 py-4 text-sm font-medium whitespace-nowrap">';
+            if ($count === 0) {
+                echo htmlspecialchars($cell); // Erster Wert ist kein Eingabefeld
+            } else {
+                echo '<input class="bg-gray-900" name="inputValue'.$rowId.'_'.$count.'" value="'.$inputValue.'">';
+//                $inputValues[] = " ".$inputValue; // Add the value to the array
+            }
+////
+//            echo '</td></form>';
             $count += 1;
         }
+
+
+        // Convert the array of input values to a string
+//        $inputValuesString = implode(",", $inputValues);
 
         // EDIT & DELETE BUTTON
         echo '
             <td class="px-4 py-4 text-sm whitespace-nowrap">
                 <div class="flex items-center gap-x-6">
-                    <form method="post">
-                        <button type="submit" name="deleteRow" value="' . $columnNames[0] . ' = '. $columnContent . '" class="text-gray-300 transition-colors duration-200 hover:text-red-500 focus:outline-none">
+                    <form method="post" id="deleteRowForm">
+                        <button type="submit" name="deleteRow" value="' . $columnNames[0] . ' = '. $columnContent .  ' " class="text-gray-300 transition-colors duration-200 hover:text-red-500 focus:outline-none">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                             </svg>
                         </button>
                     </form>
 
-                    <button class="transition-colors duration-200 hover:text-yellow-500 text-gray-300 focus:outline-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                        </svg>
-                    </button>
+                    <button type="submit" name="editRow" value="' . $columnNames[0] . ' = '. $columnContent . ' " class="transition-colors duration-200 hover:text-yellow-500 text-gray-300 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                            </svg>
+                        </button>
                 </div>
             </td>
         </tr>';
     }
 }
 
+
+
+
 // delete row from mysql database
-function deleteRow($DELETE_PARAMETER): void {
+function deleteRow($DELETE_PARAMETER) {
     global $conn;
     global $tableName;
 

@@ -81,7 +81,7 @@
 
         <div class="flex items-center justify-between pb-4">
             <div class="inline-flex overflow-hidden border divide-x rounded-lg bg-gray-900 border-gray-700 divide-gray-700">
-                <button class="px-5 py-2 text-xs font-medium text-gray-600 transition-colors duration-200 sm:text-sm dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">
+                <button onclick="document.getElementById('newRow').style.display = '';" class="px-5 py-2 text-xs font-medium text-gray-600 transition-colors duration-200 sm:text-sm dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">
                     Neuen Eintrag erstellen
                 </button>
             </div>
