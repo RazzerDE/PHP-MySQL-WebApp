@@ -113,7 +113,24 @@ function buildTableHeaders() {
 function buildTableRows() {
     global $tableData;
     global $columnNames;
-    $dom = new DOMDocument;
+
+    $form = '<form method="post" id="newRowForm"><tr id="newRow" style="display: none">';
+    foreach ($tableData[0] as $cell) {
+        $form .= '<td><input class="bg-gray-700" type="text" name="newRow[]"></td>';
+    }
+    $form .= '<td>
+                <button type="submit" class="text-gray-300 transition-colors duration-200 hover:text-red-500 focus:outline-none ml-14 mt-2" >
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" x="0" y="0" viewBox="0 0 32 32" style="enable-background:new 0 0 512 512" xml:space="preserve" class="">
+            <g>
+                <path d="m30.71 7.29-6-6A1 1 0 0 0 24 1h-2v8a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2V1H4a3 3 0 0 0-3 3v24a3 3 0 0 0 3 3h2v-9a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v9h2a3 3 0 0 0 3-3V8a1 1 0 0 0-.29-.71z" fill="#FFFFFF" opacity="1" data-original="#000000" class=""></path>
+                <path d="M12 1h8v8h-8zM23 21H9a1 1 0 0 0-1 1v9h16v-9a1 1 0 0 0-1-1z" fill="#FFFFFF" opacity="1" data-original="#000000" class=""></path>
+            </g>
+        </svg>
+                </button>
+             </td>';
+    $form .= '</tr> </form>';
+
+    echo $form;
 
     // Loop through each row of data and create a <tr> element
     foreach ($tableData as $row) {
@@ -132,7 +149,7 @@ function buildTableRows() {
             if ($count === 0) {
                 echo htmlspecialchars($cell); // Erster Wert ist kein Eingabefeld
             } else {
-                echo '<input class="w-full bg-gray-900" name="editRow[' . $columnNames[$count] . ']" value="' . htmlspecialchars($cell) . '">';
+                echo '<input disabled class="editInp w-full bg-gray-900" name="editRow[' . $columnNames[$count] . ']" value="' . htmlspecialchars($cell) . '">';
                 echo '<input type="hidden" name="rowId" value="' . $columnNames[0] . ' = '. $columnContent .  '">';
             }
             echo '</td>';
@@ -157,6 +174,7 @@ function buildTableRows() {
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                         </svg>
+                        
                     </button>
                 </div>
             </td>
