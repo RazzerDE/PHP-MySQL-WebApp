@@ -120,7 +120,7 @@
         <div class="flex flex-col">
             <div class="-my-2 overflow-x-auto -mx-8">
                 <div class="inline-block min-w-full align-middle px-8 h-full">
-                    <div class="overflow-auto border border-gray-700 rounded-lg" style="max-height: 63vh;">
+                    <div class="overflow-auto border border-gray-700 rounded-lg" style="max-height: 61vh;">
                         <table class="table-fixed border-separate min-w-full divide-y divide-gray-700" id="mysql-table">
                             <thead class="bg-gray-800 sticky top-0">
                                 <?php
