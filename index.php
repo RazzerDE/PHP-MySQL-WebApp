@@ -81,13 +81,19 @@
 
         <div class="flex items-center justify-between pb-4">
             <div class="inline-flex overflow-hidden border divide-x rounded-lg bg-gray-900 border-gray-700 divide-gray-700">
-                <button onclick="document.getElementById('newRow').style.display = '';" class="px-5 py-2 text-xs font-medium transition-colors duration-200 sm:text-sm hover:bg-gray-800 text-gray-300">
-                    Neuen Eintrag erstellen
-                </button>
+                <?php global $tableData;
+                    if (!empty($tableData)) {
+                        echo '
+                            <button onclick="document.getElementById(\'newRow\').style.display = \'\';" class="px-5 py-2 text-xs font-medium transition-colors duration-200 sm:text-sm hover:bg-gray-800 text-gray-300">
+                                Neuen Eintrag erstellen
+                            </button>
+                        ';
+                    }
+                ?>
             </div>
 
             <!-- RESET Table Button if custom SQL Statement was used -->
-            <a href="index.php" class="hidden" id="default_table">
+            <a href="index.php" class="<?php global $tableData; if (!empty($tableData)) { echo 'hidden'; } ?>" id="default_table">
                 <input type="submit" name="reset_table" id="reset_table" value="Standard-Tabelle anzeigen"
                        class="rounded-md bg-rose-600 px-5 py-2.5 text-sm font-medium text-white shadow cursor-pointer
                                       transition hover:bg-rose-600/80" />
@@ -125,6 +131,7 @@
                                         buildTableHeaders();
                                     } else {
                                         echo "<div class='flex justify-center align-center h-full'>Die Tabelle ist leer.</div>";
+                                        return;
                                     }?>
                             </thead>
                             <tbody class="divide-y divide-gray-700 bg-gray-900 overflow-y-auto border border-collapse
@@ -152,5 +159,6 @@
       </div>
     </footer>
   </body>
+
   <script type="text/javascript" src="assets/js/app.js"></script>
 </html>
