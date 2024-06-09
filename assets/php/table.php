@@ -56,7 +56,19 @@ function getAllTableData($table = null, $statement = null): array {
 
     // sort table based on filter
     if (isset($_GET['filterBy'])) {
-        $SQL .= " ORDER BY ".$_GET['filterBy']." ASC";
+        session_start();
+
+        if (!isset($_SESSION['lastFilter'])) {
+            $_SESSION['lastFilter'] = false;
+        }
+
+        if ($_SESSION['lastFilter']) {
+            $SQL .= " ORDER BY ".$_GET['filterBy']." ASC";
+        } else {
+            $SQL .= " ORDER BY ".$_GET['filterBy']." DESC";
+        }
+
+        $_SESSION['lastFilter'] = !$_SESSION['lastFilter'];
 
         // Dieser Code würde den "selectionSort"-Algorithmus verwenden, welcher sehr bekannt in PHP ist.
         // $tableData = selectionSort($tableData, $_GET['filterBy']);
