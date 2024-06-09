@@ -24,7 +24,7 @@ try {
     exit();
 }
 
-function resetDB($redirected = False) {
+function resetDB($redirected = False): void {
     global $conn;
 
     $filename = 'assets/sql/buchladen.sql';
@@ -44,7 +44,7 @@ function resetDB($redirected = False) {
         // If its semicolon at the end, so that is the end of one query
         if (substr(trim($line), -1, 1) == ';')  {
             // Perform the query
-            mysqli_query($conn, $tempLine) or print("Error in " . $tempLine .":". mysqli_error());
+            mysqli_query($conn, $tempLine) or print("Error in " . $tempLine .":". mysqli_error($conn));
             // Reset temp variable to empty
             $tempLine = '';
         }
@@ -57,7 +57,7 @@ function resetDB($redirected = False) {
 
 }
 
-function selectionSort($tableData, $attribute) {
+function selectionSort($tableData, $attribute): array {
     $n = count($tableData);
     for ($i = 0; $i < $n; $i++) {
         $minIndex = $i;
@@ -75,25 +75,18 @@ function selectionSort($tableData, $attribute) {
     return $tableData;
 }
 
-function checkDatesInArray($array) {
-    foreach ($array as $item) {
-        // Überprüfen, ob das Element ein Datum im Format 'YYYY-MM-DD' ist
-        if (preg_match("/\d{4}-\d{2}-\d{2}/", $item)) {
-            // Zerlegen des Datums in Jahr, Monat und Tag
-            list($year, $month, $day) = explode("-", $item);
-
-            // Überprüfen, ob das Datum gültig ist
-            if (!checkdate((int)$month, (int)$day, (int)$year)) {
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            return true;
-        }
+function executeStatement($stmt): void {
+    try {
+        $stmt->execute();
+        header("Refresh:0");
+        exit();
+    } catch (mysqli_sql_exception $e) {
+        handleSqlException($e);
     }
-    return true;
 }
 
+function handleSqlException($e): void {
+    echo "<p class='text-center bg-red-700 border rounded border-gray-700'>" . "Fehler beim Ausführen des SQL-Statements: " . $e->getMessage() . "</p>";
+}
 
 include_once 'assets/php/url_queries.php';

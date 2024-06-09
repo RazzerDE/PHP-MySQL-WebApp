@@ -15,51 +15,28 @@ function getTableDataByURL() {
         getAllTableData();
     }
 
-//    if (isset($_POST['editRow'])) {
-//        $newRowValues = explode(',', $_POST['inputValues']);
-//        $id = $_POST['editRow'];
-//
-//        $fields = implode(", ", $fields);
-//
-//        $newString = strstr($fields, ',');
-//        $fields = explode(',', ltrim($newString, ', '));
-//
-//        $setStatement = "";
-//        for ($i = 0; $i < count($fields); $i++) {
-//            // Trim the values and add quotes around them if they are strings
-//            $value = trim($newRowValues[$i]);
-//            if (!is_numeric($value)) {
-//                $value = "'" . $conn->real_escape_string($value) . "'";
-//            }
-//            $setStatement .= trim($fields[$i]) . " = " . $value;
-//            if ($i != count($fields) - 1) {
-//                $setStatement .= ", ";
-//            }
-//        }
-//
-//        // Prepare sql statement
-//        $sql = "UPDATE $selectedTable SET ". $setStatement ." WHERE ". $id;
-//
-//        $stmt = $conn->prepare($sql);
-//
-//        try {
-//            // Versuchen Sie, das Statement auszuführen
-//            $stmt->execute();
-//            header("Refresh:0");
-//            exit();
-//        } catch (mysqli_sql_exception $e) {
-//            // Fangen Sie den Fehler ab und behandeln Sie ihn
-//            if (!checkDatesInArray($newRowValues)) {
-//                echo "<p class='text-center bg-red-700 border rounded border-gray-700'>". "Datum wurde nicht Regelkonform eingegeben YYYY-MM-DD". "</p>";
-//            } else {
-//                echo "<p class='text-center bg-red-700 border rounded border-gray-700'>" . "Fehler beim Ausführen des SQL-Statements: " . $e->getMessage() . "</p>";
-//            }
-//        }
-//    }
-
-
     // reset database if empty
     if (empty($tableData)) {
         resetDB();
     }
+}
+
+function getFieldsForTable($selectedTable): array {
+    $fields = [];
+    $tables = [
+        'autoren' => ['autoren_id', 'vorname', 'nachname', 'geburtsdatum'],
+        'autoren_has_buecher' => ['autoren_autoren_id', 'buecher_buecher_id'],
+        'buecher' => ['buecher_id', 'titel', 'verkaufspreis', 'einkaufspreis', 'erscheinungsjahr', 'verlage_verlage_id'],
+        'buecher_has_lieferanten' => ['buecher_buecher_id', 'lieferanten_lieferanten_id'],
+        'buecher_has_sparten' => ['buecher_buecher_id', 'sparten_sparten_id'],
+        'lieferanten' => ['lieferanten_id', 'name', 'orte_orte_id'],
+        'orte' => ['orte_id', 'postleitzahl', 'name'],
+        'sparten' => ['sparten_id', 'bezeichnung'],
+        'verlage' => ['verlage_id', 'name', 'orte_orte_id']
+    ];
+    if (array_key_exists($selectedTable, $tables)) {
+        $fields = $tables[$selectedTable];
+    }
+
+    return $fields;
 }
