@@ -145,19 +145,17 @@
         </div>
     </section>
 
+    <footer class="bg-full" style="position: sticky; bottom: 0; width: 100%;">
+        <div class="container px-6 py-4 mx-auto">
+            <hr class="my-4 border-gray-700" />
 
+            <div class="flex items-center justify-center">
+                <p class="text-sm text-gray-300">💕 - Erstellt von Yannic Drews & Yanic Döpner aus der EFI23a.</p>
 
-
-    <footer class="bg-full">
-      <div class="container px-6 py-4 mx-auto" style="padding-top: 1px;">
-        <hr class="my-4 border-gray-700" />
-
-        <div class="flex items-center justify-center">
-          <p class="text-sm text-gray-300">💕 - Erstellt von Yannic Drews & Yanic Döpner aus der EFI23a.</p>
-
+            </div>
         </div>
-      </div>
     </footer>
+
   </body>
 
   <script type="text/javascript" src="assets/js/app.js"></script>
