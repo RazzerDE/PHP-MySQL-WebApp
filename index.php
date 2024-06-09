@@ -21,7 +21,7 @@
   <body class="overflow-hidden">
     <?php include_once 'assets/php/buttons.php' ?>
     <header class="bg-card">
-      <div class="mx-auto max-w-screen-xl px-6 px-8">
+      <div class="mx-auto max-w-screen-xl px-8">
         <div class="flex h-16 items-center justify-between">
           <a href="index.php">
               <img src="assets/img/logo.png" alt="Logo" width="40" height="40">
@@ -64,7 +64,7 @@
             <div class="flex items-center mt-4 gap-x-3">
                 <form id="dropdownForm" action="" method="get">
                     <label for="dropdownSelect">
-                        <select id="dropdownSelect" name="dropdownSelect" onchange="this.form.submit()" class="flex items-center text-white justify-center w-1/2 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 border rounded-lg gap-x-2 sm:w-auto dark:hover:bg-gray-800 bg-gray-900 hover:bg-gray-100 border-gray-700">
+                        <select id="dropdownSelect" name="dropdownSelect" onchange="this.form.submit()" class="flex items-center text-white justify-center w-1/2 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 border rounded-lg gap-x-2 sm:w-auto hover:bg-gray-800 bg-gray-900 border-gray-700">
                             <option disabled selected hidden="hidden" value=""><?php echo getTableName(); ?></option>
 
                             <?php
@@ -81,7 +81,7 @@
 
         <div class="flex items-center justify-between pb-4">
             <div class="inline-flex overflow-hidden border divide-x rounded-lg bg-gray-900 border-gray-700 divide-gray-700">
-                <button onclick="document.getElementById('newRow').style.display = '';" class="px-5 py-2 text-xs font-medium text-gray-600 transition-colors duration-200 sm:text-sm dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">
+                <button onclick="document.getElementById('newRow').style.display = '';" class="px-5 py-2 text-xs font-medium transition-colors duration-200 sm:text-sm hover:bg-gray-800 text-gray-300">
                     Neuen Eintrag erstellen
                 </button>
             </div>
