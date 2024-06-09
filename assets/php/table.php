@@ -130,9 +130,12 @@ function buildTableRows(): void {
         foreach ($row as $cell) {
             $tdContent = '';
 
+            if ($count === 0) {
+                $columnContent = htmlspecialchars($cell);
+            }
+
             if (strpos(getTableName(), '_has_') !== false or $count === 0) {
                 $tdContent .= htmlspecialchars($cell);
-                $columnContent = htmlspecialchars($cell);
             } else {
                 $tdContent .= '<input id="editInp-' . $columnContent . '" disabled class="rounded w-full bg-gray-900" name="editRow[' . $columnNames[$count] . ']" value="' . $cell . '">';
                 $tdContent .= '<input type="hidden" name="rowId" value="' . $columnNames[0] . ' = ' . $columnContent . '">';
