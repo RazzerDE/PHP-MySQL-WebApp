@@ -1,5 +1,6 @@
 <?php
 require_once 'assets/php/main.php';
+require_once 'assets/php/utility.php';
 
 $tableData = [];
 $columnNames = null;
@@ -8,7 +9,7 @@ $tableName = null;
 $current_table = "Wähle eine Tabelle in dem rechten Dropdown-Menü aus.";
 
 // get table name
-function getTableName() {
+function getTableName(): string {
     if (isset($_GET['sql_statement'])) {
         preg_match('/FROM\s+(\w+)/i', str_replace("+", "", $_GET['sql_statement']), $matches);
         $tableName = $matches[1];
@@ -22,7 +23,7 @@ function getTableName() {
 }
 
 // get all tables from database
-function getTables() {
+function getTables(): array {
     global $conn;
     $SQL = "SHOW TABLES";
     $tables = [];
@@ -37,7 +38,7 @@ function getTables() {
 
 
 // get Table data
-function getAllTableData($table = null, $statement = null) {
+function getAllTableData($table = null, $statement = null): array {
     global $conn;
     global $tableData;
     global $tableName;
@@ -72,7 +73,7 @@ function getAllTableData($table = null, $statement = null) {
 
 //          FUNCTIONS TO BUILD DESIGN OF PAGE
 
-function buildTableHeaders() {
+function buildTableHeaders(): void {
     global $tableData;
     global $columnNames;
 
@@ -103,29 +104,19 @@ function buildTableHeaders() {
     // EDIT & DELETE HEADER
     echo '
         <th scope="col" class="py-3.5 px-4 text-sm font-normal text-left text-gray-400">
-            <span>Eintrag Edit</span>
+            <span>Aktion</span>
         </th>';
 
     // End the table row
     echo '</tr>';
 }
 
-function buildTableRows() {
+function buildTableRows(): void {
     global $tableData;
     global $columnNames;
 
-    $form = '<form method="post" id="newRowForm"><tr id="newRow" style="display: none">';
-    foreach ($tableData[0] as $cell) {
-        $form .= '<td><input class="bg-gray-700" type="text" name="newRow[]"></td>';
-    }
-    $form .= '<td>
-                <button type="submit" class="text-gray-300 transition-colors duration-200 hover:text-red-500 focus:outline-none ml-14 mt-2" >
-                    <img src="/assets/img/floppy-disk.png" width="24" height="24"  alt=""/>
-                </button>
-             </td>';
-    $form .= '</tr> </form>';
-
-    echo $form;
+    // create new row at start if user wants to add row
+    echo newRowForm($tableData);
 
     // Loop through each row of data and create a <tr> element
     foreach ($tableData as $row) {
@@ -135,90 +126,35 @@ function buildTableRows() {
 
         $count = 0;
         echo '<form name="editRow" method="post" id="editRowForm" onsubmit="this.form.submit();">';
+
+        // add needed forms to row to allow edit/delete & save function
         foreach ($row as $cell) {
-            if ($count === 0) {
+            $tdContent = '';
+
+            if (strpos(getTableName(), '_has_') !== false or $count === 0) {
+                $tdContent .= htmlspecialchars($cell);
                 $columnContent = htmlspecialchars($cell);
+            } else {
+                $tdContent .= '<input id="editInp-' . $columnContent . '" disabled class="rounded w-full bg-gray-900" name="editRow[' . $columnNames[$count] . ']" value="' . $cell . '">';
+                $tdContent .= '<input type="hidden" name="rowId" value="' . $columnNames[0] . ' = ' . $columnContent . '">';
             }
 
-            echo '<td class="px-4 py-4 text-sm font-medium whitespace-nowrap">';
-            if (strpos(getTableName(), '_has_') !== false) {
-                echo htmlspecialchars($cell);
-            }
-            else {
-                if ($count === 0) {
-                    echo htmlspecialchars($cell); // Erster Wert ist kein Eingabefeld
-                } else {
-                    echo '<input id="editInp" disabled class="editInp-' . $columnContent . ' rounded w-full bg-gray-900" name="editRow[' . $columnNames[$count] . ']" value="' . htmlspecialchars($cell) . '">';
-                    echo '<input type="hidden" name="rowId" value="' . $columnNames[0] . ' = ' . $columnContent . '">';
-                }
-            }
-            echo '</td>';
-
+            echo '<td class="px-4 py-4 text-sm font-medium whitespace-nowrap">' . $tdContent . '</td>';
             $count += 1;
         }
-        echo '<td id="editSave-'.$columnContent.'" style="display: none">
-                <button type="submit" class="text-gray-300 transition-colors duration-200 hover:text-red-500 focus:outline-none ml-14 mt-2" >
-                    <img src="/assets/img/floppy-disk.png" width="24" height="24"  alt=""/>
-                </button>
-             </td>';
-        echo '</form>';
 
-        echo '<input type="submit" hidden="hidden" value=" ">';
-        echo '</form>';
+        // show save button if user clicked on edit
+        echo saveButton($columnContent);
 
-        // DELETE BUTTON
-        echo '
-            <td id="editButton-'.$columnContent.'" class="px-4 py-4 text-sm whitespace-nowrap">
-                <div class="flex items-center gap-x-6">
-                    <form method="post" id="deleteRowForm">
-                        <button type="submit" name="deleteRow" value="' . $columnNames[0] . ' = '. $columnContent .  ' " class="text-gray-300 transition-colors duration-200 hover:text-red-500 focus:outline-none">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.108 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                            </svg>
-                        </button>
-                    </form>';
-        if (strpos(getTableName(), '_has_') !== false) {
-            echo        '<button class="cursor-not-allowed transition-colors duration-200 text-gray-800 focus:outline-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                        </svg>
-                    </button>';
-        } else {
-            echo        '<button onclick="editMode('.$columnContent.')" id="edit" class="transition-colors duration-200 hover:text-yellow-500 text-gray-300 focus:outline-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                        </svg>
-                    </button>';
-        }
-        echo        '<script>
-                        function editMode(id) {
-                            let input = document.querySelectorAll(`.editInp-`+id);
-                            let save = document.querySelectorAll(`#editSave-`+id);
-                            let edit = document.querySelectorAll(`#editButton-`+id);
-                            
-                            input.forEach((e) => {
-                                e.classList.add(`bg-gray-600`);   
-                                e.disabled = false;
-                            });
-                            
-                            save.forEach((e) => {
-                               e.style.display = ""; 
-                            });
-                            
-                            edit.forEach((e) => {
-                                e.style.display = "none";
-                            })
-                            
-                        }
-                    </script>
-                </div>
-            </td>
-        </tr>';
+        // show delete & edit buttons
+        echo manageButtons($columnContent, $columnNames);
+
+        echo '</div></td></tr>';
     }
 }
 
 // delete row from mysql database
-function deleteRow($DELETE_PARAMETER) {
+function deleteRow($DELETE_PARAMETER): void {
     global $conn;
     global $tableName;
 
@@ -231,4 +167,51 @@ function deleteRow($DELETE_PARAMETER) {
     header("Refresh: 0");
     exit();
 
+}
+
+// add row to mysql table
+function insertNewRow(): void {
+    global $conn;
+
+    $tableName = getTableName();
+    $fields = getFieldsForTable($tableName);
+
+    $newRowValues = $_POST['newRow'];
+    $columns = implode(", ", $fields);
+    $placeholders = rtrim(str_repeat('?, ', count($newRowValues)), ', ');
+
+    $newRowValues = str_replace(",",".", $newRowValues);
+
+    // Prepare sql statement
+    $sql = "INSERT INTO $tableName ($columns) VALUES ($placeholders)";
+    $stmt = $conn->prepare($sql);
+
+    $types = str_repeat('s', count($newRowValues)); // 's' mean string
+    $stmt->bind_param($types, ...$newRowValues);
+
+    executeStatement($stmt);
+}
+
+// edit row from mysql table
+function updateRow(): void {
+    global $conn;
+
+    $tableName = getTableName();
+    $fields = getFieldsForTable($tableName);
+
+    $newRowValues = $_POST['editRow'];
+    $id = $_POST['rowId'];
+    $setStatement = '';
+
+    // get values needed for update
+    $intersect = array_intersect_key($newRowValues, array_flip($fields));
+    foreach($intersect as $key => $value){
+        $setStatement .= $key . " = '" . $value . "', ";
+    }
+
+    $setStatement = rtrim($setStatement, ', '); // remove the last comma
+    $sql = "UPDATE $tableName SET ". $setStatement ." WHERE ". $id;
+    $stmt = $conn->prepare($sql);
+
+    executeStatement($stmt);
 }

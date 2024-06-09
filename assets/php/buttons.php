@@ -12,3 +12,13 @@ if (!empty($_POST['reset_db'])) {
 if (!empty($_POST['deleteRow'])) {
     deleteRow($_POST['deleteRow']);
 }
+
+// add row to table
+if (isset($_POST['newRow'])) {
+    insertNewRow();
+}
+
+// edit row from table
+if (isset($_POST['editRow'])) {
+    updateRow();
+}

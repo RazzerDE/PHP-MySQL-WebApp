@@ -3,31 +3,16 @@
 #       MODIFY TABLE BASED ON URL_QUERIES
 
 function getTableDataByURL() {
-    global $conn;
     global $tableData;
 
-    $selectedTable = 'buecher';
-    $sql = 'SELECT * FROM '.$selectedTable;
-
+    // change sql statement if another one is needed
     if (isset($_GET['sql_statement'])) {
-        $sql = $_GET['sql_statement'];
-        preg_match('/FROM\s+(\w+)/i', $sql, $matches);
-        $selectedTable = $matches[1];
+        getAllTableData(null, $_GET['sql_statement']);
     } else if (isset($_GET['dropdownSelect'])) {
-        $selectedTable = $_GET['dropdownSelect'];
-        $sql = 'SELECT * FROM '.$selectedTable;
-    }
-
-    getAllTableData(null, $sql);
-
-    $fields = getFieldsForTable($selectedTable);
-
-    if (isset($_POST['newRow'])) {
-        insertNewRow($selectedTable, $fields);
-    }
-
-    if (isset($_POST['editRow'])) {
-        updateRow($selectedTable, $fields);
+        $table = $_GET['dropdownSelect'];
+        getAllTableData(null, 'SELECT * FROM '.$table);
+    } else {
+        getAllTableData();
     }
 
     // reset database if empty
@@ -36,7 +21,7 @@ function getTableDataByURL() {
     }
 }
 
-function getFieldsForTable($selectedTable) {
+function getFieldsForTable($selectedTable): array {
     $fields = [];
     $tables = [
         'autoren' => ['autoren_id', 'vorname', 'nachname', 'geburtsdatum'],
@@ -54,88 +39,4 @@ function getFieldsForTable($selectedTable) {
     }
 
     return $fields;
-}
-
-function insertNewRow($selectedTable, $fields) {
-    global $conn;
-
-    $newRowValues = $_POST['newRow'];
-    $columns = implode(", ", $fields);
-    $placeholders = rtrim(str_repeat('?, ', count($newRowValues)), ', ');
-
-    $newRowValues = str_replace(",",".", $newRowValues);
-
-    // Prepare sql statement
-    $sql = "INSERT INTO $selectedTable ($columns) VALUES ($placeholders)";
-
-    $stmt = $conn->prepare($sql);
-
-    $types = str_repeat('s', count($newRowValues)); // 's' mean string
-    $stmt->bind_param($types, ...$newRowValues);
-
-    try {
-        // Versuchen Sie, das Statement auszuführen
-        $stmt->execute();
-        header("Refresh:0");
-        exit();
-    } catch (mysqli_sql_exception $e) {
-        // Fangen Sie den Fehler ab und behandeln Sie ihn
-        handleSqlException($e, $newRowValues);
-    }
-}
-
-function updateRow($selectedTable, $fields) {
-    global $conn;
-
-    $newRowValues = $_POST['editRow'];
-    $id = $_POST['rowId'];
-
-    $setStatement = "";
-
-    // Durchlaufen Sie die Felder und newRowValues Arrays, beginnend bei Index 1
-    for($i = 1; $i < count($fields); $i++){
-        // Überprüfen Sie, ob das Feld im newRowValues Array existiert
-        if(array_key_exists($fields[$i], $newRowValues)){
-            // Fügen Sie jedes Feld und seinen neuen Wert dem setStatement hinzu
-            $setStatement .= $fields[$i] . " = '" . $newRowValues[$fields[$i]] . "'";
-            // Fügen Sie ein Komma hinzu, wenn es nicht das letzte Element ist
-            if($i != count($fields) - 1){
-                $setStatement .= ", ";
-            }
-        }
-    }
-
-    $sql = "UPDATE $selectedTable SET ". $setStatement ." WHERE ". $id;
-
-    $stmt = $conn->prepare($sql);
-
-    try {
-        $stmt->execute();
-        header("Refresh:0");
-        exit();
-    } catch (mysqli_sql_exception $e) {
-        handleSqlException($e, $newRowValues);
-    }
-}
-
-
-
-function handleSqlException($e, $newRowValues) {
-    echo "<p class='text-center bg-red-700 border rounded border-gray-700'>" . "Fehler beim Ausführen des SQL-Statements: " . $e->getMessage() . "</p>";
-}
-
-function checkDatesInArray($array) {
-    foreach ($array as $item) {
-        // Überprüfen, ob das Element ein Datum im Format 'YYYY-MM-DD' ist
-        if (preg_match("/\d{4}-\d{2}-\d{2}/", $item)) {
-            // Zerlegen des Datums in Jahr, Monat und Tag
-            list($year, $month, $day) = explode("-", $item);
-
-            // Überprüfen, ob das Datum gültig ist
-            if (!checkdate((int)$month, (int)$day, (int)$year)) {
-                return false;
-            }
-        }
-    }
-    return true;
 }

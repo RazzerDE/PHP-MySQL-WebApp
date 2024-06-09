@@ -45,3 +45,22 @@ function isValidSelectStatement(sql) {
     const regex = /^SELECT\s[\w\*\)\(\,\s]+\sFROM\s[\w]+$/i;
     return regex.test(sql);
 }
+
+function editMode(id) {
+    let input = document.querySelectorAll(`#editInp-`+id);
+    let save = document.querySelectorAll(`#editSave-`+id);
+    let edit = document.querySelectorAll(`#editButton-`+id);
+
+    input.forEach((e) => {
+        e.classList.add(`bg-gray-600`);
+        e.disabled = false;
+    });
+
+    save.forEach((e) => {
+        e.style.display = "";
+    });
+
+    edit.forEach((e) => {
+        e.style.display = "none";
+    })
+}
