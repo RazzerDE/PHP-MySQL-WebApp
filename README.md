@@ -3,7 +3,7 @@
 </h1>
 
 <p align="center">
-  <i align="center">This project involves a user-friendly website to display tables from a MySQL database - developed using HTML/CSS and JavaScript with PHP.</i>
+  <i align="center">This project involves a user-friendly website to display tables from a MySQL database.<br />Developed using HTML-Stack with PHP.</i>
 
   ![image](https://github.com/RazzerDE/PHP-MySQL-WebApp/assets/49283907/192d06e0-7c20-4b35-9a04-eb74d6a0df78)
 
