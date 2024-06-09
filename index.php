@@ -18,7 +18,7 @@
     </script>
   </head>
 
-  <body class="overflow-hidden">
+  <body class="overflow-hidden" style="height: 100vh;">
     <?php include_once 'assets/php/buttons.php' ?>
     <header class="bg-card">
       <div class="mx-auto max-w-screen-xl px-8">
@@ -43,9 +43,9 @@
       </div>
     </header>
 
-    <section class="grid pt-10 pb-2 px-8 min-h-full w-full bg-full text-white h-full px-4">
+    <section class="grid items-start pt-10 pb-2 px-8 min-h-full w-full bg-full text-white h-full px-4" style="grid-auto-rows: 9%; grid-row-gap: 10px;">
         <?php include_once 'assets/php/table.php'; getTableDataByURL(); ?>
-        <div class="sm:flex items-center justify-between">
+        <div class="pb-6 sm:flex items-center justify-between">
             <div>
                 <div class="flex items-center gap-x-3">
                     <!-- Show currently used table -->
@@ -79,7 +79,7 @@
             </div>
         </div>
 
-        <div class="flex items-center justify-between pb-4">
+        <div class="pt-10 flex items-center justify-between pb-4 h-1/2">
             <div class="inline-flex overflow-hidden border divide-x rounded-lg bg-gray-900 border-gray-700 divide-gray-700">
                 <?php global $tableData;
                     if (!empty($tableData)) {
@@ -119,8 +119,8 @@
 
         <div class="flex flex-col">
             <div class="-my-2 overflow-x-auto -mx-8">
-                <div class="inline-block min-w-full align-middle px-8">
-                    <div class="overflow-auto border border-gray-700 rounded-lg" style="max-height: 55vh;">
+                <div class="inline-block min-w-full align-middle px-8 h-full">
+                    <div class="overflow-auto border border-gray-700 rounded-lg" style="max-height: 63vh;">
                         <table class="table-fixed border-separate min-w-full divide-y divide-gray-700" id="mysql-table">
                             <thead class="bg-gray-800 sticky top-0">
                                 <?php
@@ -145,9 +145,9 @@
         </div>
     </section>
 
-    <footer class="bg-full" style="position: sticky; bottom: 0; width: 100%;">
-        <div class="container px-6 py-4 mx-auto">
-            <hr class="my-4 border-gray-700" />
+    <footer class="pt-2 bg-full pb-6" style="position: sticky; bottom: 0; width: 100%;">
+        <div class="container px-6 mx-auto">
+            <hr class="my-4 border-gray-700/70" />
 
             <div class="flex items-center justify-center">
                 <p class="text-sm text-gray-300">💕 - Erstellt von Yannic Drews & Yanic Döpner aus der EFI23a.</p>
