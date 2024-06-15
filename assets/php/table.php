@@ -6,7 +6,7 @@ $tableData = [];
 $columnNames = null;
 $tableName = null;
 
-$current_table = "Wähle eine Tabelle in dem rechten Dropdown-Menü aus.";
+$current_table = "Pick a table inside the right dropdown menu.";
 
 // get table name
 function getTableName(): string {
@@ -69,9 +69,6 @@ function getAllTableData($table = null, $statement = null): array {
         }
 
         $_SESSION['lastFilter'] = !$_SESSION['lastFilter'];
-
-        // Dieser Code würde den "selectionSort"-Algorithmus verwenden, welcher sehr bekannt in PHP ist.
-        // $tableData = selectionSort($tableData, $_GET['filterBy']);
     }
 
     $result = $conn->query($SQL);
@@ -79,6 +76,8 @@ function getAllTableData($table = null, $statement = null): array {
         $tableData[] = $row;
     }
 
+    // This code would use the "selectionSort" algorithm to sort by column after we received the database content.
+    // $tableData = selectionSort($tableData, $_GET['filterBy']);
     return $tableData;
 }
 

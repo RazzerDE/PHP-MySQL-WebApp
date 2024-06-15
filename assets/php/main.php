@@ -1,14 +1,14 @@
 <?php
+#       THE "SELECTIONSORT" ALGORITHM IS COMMENTED OUT, BUT WORKS AS EXPECTED - CHECK BELOW TO SEE THE FUNCTION.
+
 $servername = "localhost";
 $database = "buchladen";
 $username = "root";
-# TODO: CHANGE PASSWORD FOR XAMP!
 $password = "";
 
 // Create connection
 try {
     $conn = new mysqli($servername, $username, $password, $database);
-    # TODO: DER "SELECTIONSORT"-ALGORITHMUS IST IN DER TABLE.PHP DATEI ZU FINDEN.
 
     // Check connection
     if ($conn->connect_error) {
@@ -16,9 +16,9 @@ try {
     }
 } catch (Exception $ex) {
     if (strpos($ex->getMessage(), 'Unknown database') !== false) {
-        echo 'Die Datenbank "buchladen" existiert nicht. Bitte führe das SQL-Script aus, damit diese Seite funktioniert.';
+        echo 'The database "'. $database . '" doesn\'t exist. Please use the SQL-Script and try again!';
     } else {
-        echo 'Die Anmeldedaten für die Datenbank sind nicht korrekt - bitte korrigiere diese, damit diese Seite funktioneirt.';
+        echo 'The login credentials for the database are wrong - Maybe you mistyped?';
     }
 
     exit();

@@ -29,12 +29,12 @@
 
           <div class="flex items-center gap-12">
             <span>
-              <a class="text-gray-500">Simple Webseite mit MySQL & PHP.</a>
+              <a class="text-gray-500">Simple Website with MySQL & PHP.</a>
             </span>
 
             <form id="ResetForm" method="post">
                 <!-- RESET DB After Button click -->
-                <input type="submit" name="reset_db" id="reset_db" value="Datenbank zurücksetzen"
+                <input type="submit" name="reset_db" id="reset_db" value="Reset database"
                        class="rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white shadow cursor-pointer
                       transition hover:bg-teal-600/80" />
             </form>
@@ -52,12 +52,12 @@
                     <h2 class="text-lg font-medium text-white">🧮 - <?php global $current_table; echo $current_table; ?></h2>
                 </div>
 
-                <p class="text-gray-300 text-sm">Diese kleine Webseite hat alle benötigten Features implementiert:</p>
+                <p class="text-gray-300 text-sm">This little website has following features implemented:</p>
                 <div class="grid grid-cols-2 grid-rows-2 gap-0 gap-y-0 mb-0">
-                    <p class="text-gray-300 text-sm">✔ - Alle Tabellen einsehen (über Rechtes Dropdown)</p>
-                    <p class="text-gray-300 text-sm">✔ - SELECT-Statement selbst eingeben (über Suchleiste)</p>
-                    <p class="text-gray-300 text-sm">✔ - Änderungen wie Bearbeiten/Hinzufügen (via Buttons)</p>
-                    <p class="text-gray-300 text-sm">✔ - Filtern nach Spalte mit Selectionsort (Icon neben dem Spaltennamen)</p>
+                    <p class="text-gray-300 text-sm">✔ - See all tables from database (dropdown on the right)</p>
+                    <p class="text-gray-300 text-sm">✔ - SELECT-Statement input (Searchbar on the right)</p>
+                    <p class="text-gray-300 text-sm">✔ - Changes like Add/Delete/Edit (with Buttons)</p>
+                    <p class="text-gray-300 text-sm">✔ - Filter by column with "selection sort" (Icon after Column name)</p>
                 </div>
             </div>
 
@@ -85,7 +85,7 @@
                     if (!empty($tableData)) {
                         echo '
                             <button onclick="document.getElementById(\'newRow\').style.display = \'\';" class="px-5 py-2 text-xs font-medium transition-colors duration-200 sm:text-sm hover:bg-gray-800 text-gray-300">
-                                Neuen Eintrag erstellen
+                                Add new row to table
                             </button>
                         ';
                     }
@@ -94,7 +94,7 @@
 
             <!-- RESET Table Button if custom SQL Statement was used -->
             <a href="index.php" class="<?php global $tableData; if (!empty($tableData)) { echo 'hidden'; } ?>" id="default_table">
-                <input type="submit" name="reset_table" id="reset_table" value="Standard-Tabelle anzeigen"
+                <input type="submit" name="reset_table" id="reset_table" value="Show default table"
                        class="rounded-md bg-rose-600 px-5 py-2.5 text-sm font-medium text-white shadow cursor-pointer
                                       transition hover:bg-rose-600/80" />
             </a>
@@ -108,7 +108,7 @@
 
                 <form id="SearchForm" method="get">
                     <label><input type="text" name="sql_statement" id="sql_statement"
-                                  placeholder="SELECT spalte FROM tabelle"
+                                  placeholder="SELECT column FROM table"
                                   class="block py-1.5 pr-5 border rounded-lg w-96 placeholder-gray-400/70 pl-11
                                   bg-gray-900 text-gray-300 border-gray-600 focus:border-blue-300 focus:ring-blue-300
                                   focus:outline-none focus:ring focus:ring-opacity-40">
@@ -130,7 +130,7 @@
                                         // build the needed table headers by columns
                                         buildTableHeaders();
                                     } else {
-                                        echo "<div class='flex justify-center align-center h-full'>Die Tabelle ist leer.</div>";
+                                        echo "<div class='flex justify-center align-center h-full'>This table is empty.</div>";
                                         return;
                                     }?>
                             </thead>
@@ -150,7 +150,7 @@
             <hr class="my-4 border-gray-700/70" />
 
             <div class="flex items-center justify-center">
-                <p class="text-sm text-gray-300">💕 - Erstellt von Yannic Drews & Yanic Döpner aus der EFI23a.</p>
+                <p class="text-sm text-gray-300">💕 - Created by Yannic Drews & Yanic Döpner for a school related task.</p>
 
             </div>
         </div>
